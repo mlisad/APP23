@@ -15,7 +15,7 @@
 #              Installing all of the necessary packages            #
 ####################################################################
 source("http://bioconductor.org/biocLite.R")
-setwd("/home/mdubbelaar/Desktop/Onderzoek-APP23_RNASEQ/CreatedData/EdgeR/")
+setwd("/home/mdubbelaar/APP23/CreatedData/EdgeR/")
 #biocLite("limma")
 #biocLite("edgeR")
 #biocLite("biomaRt")
@@ -66,6 +66,7 @@ BioM <- BioM[isExpr,]
 # The raw library sizes are calculated with the use of calNormFactors
 # This is a step before calculating the estimates.
 dge <- calcNormFactors(dge)
+colnames(dge$counts) <- targets$Samples
 M2 <- cpm(dge, log=TRUE)
 ####################################################################
 #                            MDS Plot                              #
@@ -105,6 +106,8 @@ plotMDS.DGEList(dge, col=col_cell_age)
 # A heatmap with the correlation of the different genes are shown.
 # This correlation is calculated from the M2 dataset.
 cor <- cor(M2, method="spearman")
+rownames(cor) <- targets$Samples
+colnames(cor) <- targets$Conditie
 pdf("Plots/Spearman_Cor_Plot.pdf")
 heatmap.2(cor, symm = TRUE, col=greenred(350),
           trace="none", cexRow = 1 , cexCol = 1, ColSideColors= col_cell_age, RowSideColors=col_cell_age)

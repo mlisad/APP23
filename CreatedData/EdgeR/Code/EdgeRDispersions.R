@@ -41,45 +41,52 @@ lrt11 <- glmLRT(fit, contrast = c(1,0,0,-1,0,0,0,0))
 # Compares 24 month WT against 6-8 week WT
 lrt12 <- glmLRT(fit, contrast = c(0,0,0,0,1,0,0,-1))
 
-# With the use of decideTestsDGE a detection is made to distinguish the up, down al all regulated genes.
-table(decideTestsDGE(lrt01, p=0.05, adjust="BH"))
-table(decideTestsDGE(lrt02, p=0.05, adjust="BH"))
-table(decideTestsDGE(lrt03, p=0.05, adjust="BH"))
-table(decideTestsDGE(lrt04, p=0.05, adjust="BH"))
-table(decideTestsDGE(lrt05, p=0.05, adjust="BH"))
-table(decideTestsDGE(lrt06, p=0.05, adjust="BH"))
-table(decideTestsDGE(lrt07, p=0.05, adjust="BH"))
-table(decideTestsDGE(lrt08, p=0.05, adjust="BH"))
-table(decideTestsDGE(lrt09, p=0.05, adjust="BH"))
-table(decideTestsDGE(lrt10, p=0.05, adjust="BH"))
-table(decideTestsDGE(lrt11, p=0.05, adjust="BH"))
-table(decideTestsDGE(lrt12, p=0.05, adjust="BH"))
+####################################################################
+#                           Filtering Data                         #
+####################################################################
 
-# Data is stored within the toptables for further anaylsis.
-toptable1 <- topTags(lrt01, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-toptable2 <- topTags(lrt02, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-toptable3 <- topTags(lrt03, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-toptable4 <- topTags(lrt04, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-toptable5 <- topTags(lrt05, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-toptable6 <- topTags(lrt06, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-toptable7 <- topTags(lrt07, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-toptable8 <- topTags(lrt08, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-toptable9 <- topTags(lrt09, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-toptable10 <- topTags(lrt10, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-toptable11 <- topTags(lrt11, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-toptable12 <- topTags(lrt12, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
+createToptableResults <- function(lrt, number){
+  # With the use of decideTestsDGE a detection is made to distinguish the up, down al all regulated genes.
+  print(table(decideTestsDGE(lrt, p=0.05, adjust="BH")))
+  # Data is stored within the toptables for further anaylsis.
+  toptable <- topTags(lrt, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
+  # The results from the toptables are checked with the use of the own-made filtergenes function
+  # This function returns the data which contain a FDR value below the 0.05
+  toptable.results <- filterGenes(toptable)
+  #write.table(rownames(toptable.results), paste("Made_Documents/DE/DEtable", number, sep=""), sep="\n", row.names = F, col.names = F)
+  return (toptable.results)
+} 
 
-# The results from the toptables are checked with the use of the own-made filtergenes function
-# This function returns the data which contain a FDR value below the 0.05
-toptable1.results <- filterGenes(toptable1)
-toptable2.results <- filterGenes(toptable2)
-toptable3.results <- filterGenes(toptable3)
-toptable4.results <- filterGenes(toptable4)
-toptable5.results <- filterGenes(toptable5)
-toptable6.results <- filterGenes(toptable6)
-toptable7.results <- filterGenes(toptable7)
-toptable8.results <- filterGenes(toptable8)
-toptable9.results <- filterGenes(toptable9)
-toptable10.results <- filterGenes(toptable10)
-toptable11.results <- filterGenes(toptable11)
-toptable12.results <- filterGenes(toptable12)
+toptable1.results <- createToptableResults(lrt01, "1")
+toptable2.results <- createToptableResults(lrt02, "2")
+toptable3.results <- createToptableResults(lrt03, "3")
+toptable4.results <- createToptableResults(lrt04, "4")
+toptable5.results <- createToptableResults(lrt05, "5")
+toptable6.results <- createToptableResults(lrt06, "6")
+toptable7.results <- createToptableResults(lrt07, "7")
+toptable8.results <- createToptableResults(lrt08, "8")
+toptable9.results <- createToptableResults(lrt09, "9")
+toptable10.results <- createToptableResults(lrt10, "10")
+toptable11.results <- createToptableResults(lrt11, "11")
+toptable12.results <- createToptableResults(lrt12, "12")
+####################################################################
+#                      Differential Expression                     #
+####################################################################
+DE.ExpressionLogFC <- cbind(rownames(toptable1[[1]]), toptable1[[1]]$logFC, toptable2[[1]]$logFC, toptable3[[1]]$logFC,
+                       toptable4[[1]]$logFC, toptable5[[1]]$logFC, toptable6[[1]]$logFC,
+                       toptable7[[1]]$logFC, toptable8[[1]]$logFC, toptable9[[1]]$logFC,
+                       toptable10[[1]]$logFC, toptable11[[1]]$logFC, toptable12[[1]]$logFC, BioM[,3:4])
+DE.ExpressionFDR <- cbind(rownames(toptable1[[1]]), toptable1[[1]]$FDR, toptable2[[1]]$FDR, toptable3[[1]]$FDR,
+                            toptable4[[1]]$FDR, toptable5[[1]]$FDR, toptable6[[1]]$FDR,
+                            toptable7[[1]]$FDR, toptable8[[1]]$FDR, toptable9[[1]]$FDR,
+                            toptable10[[1]]$FDR, toptable11[[1]]$FDR, toptable12[[1]]$FDR, BioM[,3:4])
+
+####################################################################
+#                         Creating DE Files                        #
+####################################################################
+geneCols <- c("Genes", "2M WT vs 2M HET", "12M WT vs 12M HET", "18M WT vs 18M HET", "24M WT vs 24M HET", 
+              "12M HET vs 2M HET", "18M HET vs 12M HET", "24M HET vs 18M HET", "12M WT vs 2M WT", "18M WT vs 12M WT", "24M WT vs 18M WT",
+              "24M HET vs 2M HET", "24M WT vs 2M WT","Gene Symbol", "Gene Description")
+write.table(DE.ExpressionLogFC , "Made_Documents/DifferentialGenesLogFC.txt", row.names = F, col.names = geneCols, sep = "\t")
+write.table(DE.ExpressionFDR , "Made_Documents/DifferentialGenesFDR.txt", row.names = F, col.names = geneCols, sep = "\t")
+

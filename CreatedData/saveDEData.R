@@ -79,4 +79,4 @@ rownames(unique.Genes) <-c("6.8W_WT-6.8W_HET", "12M_WT-12M_HET", "18M_WT-18M_HET
 }
 ####################################################################
 # The data is written to a csv file, this can be used for further research.
-write.table(unique.Genes, "Made_Documents/Differential_Expression.csv", col.names=F, sep=":")
+write.table(unique.Genes, "Made_Documents/Amount_Differential_Expression.csv", col.names=F, sep=":")

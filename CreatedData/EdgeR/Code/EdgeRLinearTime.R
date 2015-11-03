@@ -8,7 +8,7 @@
 ####################################################################
 #                Function for calculating the effects              #
 ####################################################################
-calculateMaineffectsInteraction <- function(dge, design, namefile1, namefile2, namefile3, pathway) {
+calculateMaineffectsInteraction <- function(dge, design, pathwayDoc, pathwayPlot) {
   # This function makes sure that the main effect of the ages, the main effect of the genotype and the interaction model
   # of each dataset is calculated.
   # The dge and the design are necessary items to calculate the these effects.
@@ -37,17 +37,23 @@ calculateMaineffectsInteraction <- function(dge, design, namefile1, namefile2, n
   Toptable3.results <- filterGenes(Toptable3)
   
   # The last step is to plot the genes with their information in a heatmap.
-  pdf(pathway) 
+  pdf(pathwayPlot) 
   heatmap.2(M2[match(rownames(Toptable1.results), rownames(M2)),], ColSideColors= col_cell_age, cexRow = 0.01, trace = "none", scale = "row", main="Main effect genotype")
   heatmap.2(M2[match(rownames(Toptable2.results), rownames(M2)),], ColSideColors = col_cell_age, cexRow = 0.01, trace = "none", scale = "row", main="Main effect age")
   heatmap.2(M2[match(rownames(Toptable3.results), rownames(M2)),], ColSideColors = col_cell_age, cexRow = 0.01, trace = "none", scale = "row", main="Interaction effect")
   dev.off()
   
   # The unique genes are saved within a table so these gene names can be used for futher analysis. 
-  write.table(rownames(Toptable1.results), namefile1, row.names = F, col.names=F, eol=",\n", quote = F)
-  write.table(rownames(Toptable2.results), namefile2, row.names = F, col.names=F, eol=",\n", quote = F)
-  write.table(rownames(Toptable3.results), namefile3, row.names = F, col.names=F, eol=",\n", quote = F)
-}
+  write.table(rownames(Toptable1.results), paste(pathwayDoc, "main_genotype_result.txt", sep = ""), row.names = F, col.names=F, eol=",\n", quote = F)
+  write.table(rownames(Toptable2.results), paste(pathwayDoc, "main_age_result.txt", sep = ""), row.names = F, col.names=F, eol=",\n", quote = F)
+  write.table(rownames(Toptable3.results), paste(pathwayDoc, "interaction_result.txt", sep = ""), row.names = F, col.names=F, eol=",\n", quote = F)
+
+  DE_Expression <- cbind(rownames(Toptable1[[1]]), Toptable1[[1]]$logFC, Toptable1[[1]]$FDR, Toptable2[[1]]$logFC, Toptable2[[1]]$FDR, Toptable3[[1]]$logFC, Toptable3[[1]]$FDR, BioM[,3:4])
+  write.table(DE_Expression , paste(pathwayDoc, "LinearTimeDE.txt", sep=""), row.names = F,  col.names = c("Genes", "Main-effect Genotype (logFC)", 
+                            "Main-effect Gentyope (FDR)", "Main-effect Age (logFC)", "Main-effect Age (FDR)", "Linear Effect (logFC)", 
+                            "Linear Effect (FDR)", "Gene Symbol", "Gene Description"), sep = "\t")
+  
+  }
 ####################################################################
 #               Results with a design Genotype * Time              #
 ####################################################################
@@ -61,8 +67,7 @@ design.timepoints <- model.matrix(~Group*targets$Age)
 dge.timepoints <- estimateGLMCommonDisp(dge, design.timepoints)
 dge.timepoints <- estimateGLMTrendedDisp(dge.timepoints, design.timepoints)
 
-calculateMaineffectsInteraction(dge.timepoints, design.timepoints, "Made_Documents/All_ages/main_genotype_result.txt", "Made_Documents/All_ages/main_age_result.txt"
-                                  , "Made_Documents/All_ages/interaction_result.txt" ,"Plots/linear_time_heatmaps/all_ages_heatmaps.pdf")
+calculateMaineffectsInteraction(dge.timepoints, design.timepoints, "Made_Documents/All_ages/", "Plots/linear_time_heatmaps/all_ages_heatmaps.pdf")
 ####################################################################
 #    Results with a design Genotype * Time without 6-8 weeks       #
 ####################################################################
@@ -72,12 +77,23 @@ olderGroup <- factor(targets$Genotype[targets$Age != 2])
 olderGroup <- relevel(olderGroup, "WT")
 # The matrix is made without the 2 months old mice
 designOlderMice <- model.matrix(~olderGroup*targets$Age[targets$Age != "2"])
-
 dgeOlderMice <- estimateGLMCommonDisp(dge[,7:24], designOlderMice)
 dgeOlderMice <- estimateGLMTrendedDisp(dgeOlderMice, designOlderMice)
+calculateMaineffectsInteraction(dgeOlderMice, designOlderMice, "Made_Documents/12-18-24M_old_mice/", "Plots/linear_time_heatmaps/old_mice_heatmaps.pdf")
 
-calculateMaineffectsInteraction(dgeOlderMice, designOlderMice, "Made_Documents/12-18-24M_old_mice/main_genotype_result.txt", "Made_Documents/12-18-24M_old_mice/main_age_result.txt"
-                                  , "Made_Documents/12-18-24M_old_mice/interaction_result.txt", "Plots/linear_time_heatmaps/old_mice_heatmaps.pdf")
+####################################################################
+#     Results with a design Genotype * Time with 12&18 months      #
+####################################################################
+# The mice with an age of 2 months are excluded from the next design.
+# A releveling is used again to use the WT data as an intercept.
+oldestGroup <-  factor(rep(c(rep("WT",3), rep("HET",3)),2))
+oldestGroup <- relevel(oldestGroup, "WT")
+# The matrix is made without the 2 months old mice
+designOldestMice <- model.matrix(~oldestGroup*c(targets$Age[targets$Age == "18"], targets$Age[targets$Age == "24"]))
+dgeOldestMice <- estimateGLMCommonDisp(dge[,13:24], designOldestMice)
+dgeOldestMice <- estimateGLMTrendedDisp(dgeOldestMice, designOldestMice)
+calculateMaineffectsInteraction(dgeOldestMice, designOldestMice, "Made_Documents/18-24M_old_mice/", "Plots/linear_time_heatmaps/oldest_mice_heatmaps.pdf")
+
 ####################################################################
 #   Results with a design Genotype * Time without 18 & 24 months   #
 ####################################################################
@@ -88,6 +104,4 @@ youngerGroup <- relevel(youngerGroup, "WT")
 designYoungerMice <- model.matrix(~youngerGroup*c(targets$Age[targets$Age == "2" ], targets$Age[targets$Age == "12"]))
 dgeYoungerMice <- estimateGLMCommonDisp(dge[,1:12], designYoungerMice)
 dgeYoungerMice <- estimateGLMTrendedDisp(dgeYoungerMice, designYoungerMice)
-
-calculateMaineffectsInteraction(dgeYoungerMice, designYoungerMice, "Made_Documents/6_8M-12M_old_mice/main_genotype_result.txt", "Made_Documents/6_8M-12M_old_mice/main_age_result.txt"
-                                  , "Made_Documents/6_8M-12M_old_mice/interaction_result.txt" ,"Plots/linear_time_heatmaps/young_mice_heatmaps.pdf")
+calculateMaineffectsInteraction(dgeYoungerMice, designYoungerMice, "Made_Documents/6_8M-12M_old_mice/","Plots/linear_time_heatmaps/young_mice_heatmaps.pdf")
