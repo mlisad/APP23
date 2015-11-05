@@ -82,6 +82,18 @@ dgeOlderMice <- estimateGLMTrendedDisp(dgeOlderMice, designOlderMice)
 calculateMaineffectsInteraction(dgeOlderMice, designOlderMice, "Made_Documents/12-18-24M_old_mice/", "Plots/linear_time_heatmaps/old_mice_heatmaps.pdf")
 
 ####################################################################
+#   Results with a design Genotype * Time without 18 & 24 months   #
+####################################################################
+# The rep of the data is made and is releveled to make the WT the intercept.
+youngerGroup <- factor(rep(c(rep("WT",3), rep("HET",3)),2))
+youngerGroup <- relevel(youngerGroup, "WT")
+# Only the data of the mice with an age of 2 and 12 (the youngest mice) are used.
+designYoungerMice <- model.matrix(~youngerGroup*c(targets$Age[targets$Age == "2" ], targets$Age[targets$Age == "12"]))
+dgeYoungerMice <- estimateGLMCommonDisp(dge[,1:12], designYoungerMice)
+dgeYoungerMice <- estimateGLMTrendedDisp(dgeYoungerMice, designYoungerMice)
+calculateMaineffectsInteraction(dgeYoungerMice, designYoungerMice, "Made_Documents/6_8M-12M_old_mice/","Plots/linear_time_heatmaps/young_mice_heatmaps.pdf")
+
+####################################################################
 #     Results with a design Genotype * Time with 12&18 months      #
 ####################################################################
 # The mice with an age of 2 months are excluded from the next design.
@@ -95,13 +107,15 @@ dgeOldestMice <- estimateGLMTrendedDisp(dgeOldestMice, designOldestMice)
 calculateMaineffectsInteraction(dgeOldestMice, designOldestMice, "Made_Documents/18-24M_old_mice/", "Plots/linear_time_heatmaps/oldest_mice_heatmaps.pdf")
 
 ####################################################################
-#   Results with a design Genotype * Time without 18 & 24 months   #
+#     Results with a design Genotype * Time with 12&18 months      #
 ####################################################################
-# The rep of the data is made and is releveled to make the WT the intercept.
-youngerGroup <- factor(rep(c(rep("WT",3), rep("HET",3)),2))
-youngerGroup <- relevel(youngerGroup, "WT")
-# Only the data of the mice with an age of 2 and 12 (the youngest mice) are used.
-designYoungerMice <- model.matrix(~youngerGroup*c(targets$Age[targets$Age == "2" ], targets$Age[targets$Age == "12"]))
-dgeYoungerMice <- estimateGLMCommonDisp(dge[,1:12], designYoungerMice)
-dgeYoungerMice <- estimateGLMTrendedDisp(dgeYoungerMice, designYoungerMice)
-calculateMaineffectsInteraction(dgeYoungerMice, designYoungerMice, "Made_Documents/6_8M-12M_old_mice/","Plots/linear_time_heatmaps/young_mice_heatmaps.pdf")
+# The mice with an age of 2 months are excluded from the next design.
+# A releveling is used again to use the WT data as an intercept.
+extraGroup <-  factor(rep(c(rep("WT",3), rep("HET",3)),2))
+extraGroup <- relevel(oldestGroup, "WT")
+# The matrix is made without the 2 months old mice
+designExtraMice <- model.matrix(~extraGroup*c(targets$Age[targets$Age == "12"], targets$Age[targets$Age == "18"]))
+dgeExtraMice <- estimateGLMCommonDisp(dge[,7:18], designExtraMice)
+dgeExtraMice <- estimateGLMTrendedDisp(dgeExtraMice, designExtraMice)
+calculateMaineffectsInteraction(dgeExtraMice, designExtraMice, "Made_Documents/Extra/", "Plots/linear_time_heatmaps/extra_mice_group_heatmaps.pdf")
+

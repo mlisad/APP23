@@ -122,6 +122,6 @@ source("Code/EdgeRPCA.R")
 # Checks the two toptable results with the most unique genes.
 # These heatmaps are saved within the heatmap.pdf.
 pdf("Plots/heatmaps_containing_most_genes.pdf") 
-heatmap.2(M2[match(rownames(toptable11.results[[2]]), rownames(M2)),], ColSideColors = col_cell_age, cexRow = 0.01, trace = "none", scale = "row", main="24M HET - 6-8W HET")
-heatmap.2(M2[match(rownames(toptable12.results[[2]]), rownames(M2)),], ColSideColors = col_cell_age, cexRow = 0.01, trace = "none", scale = "row", main="24M WT - 6-8W WT")
+heatmap.2(M2[match(rownames(toptable11.results), rownames(M2)),], ColSideColors = col_cell_age, cexRow = 0.01, trace = "none", scale = "row", main="24M HET - 6-8W HET")
+heatmap.2(M2[match(rownames(toptable12.results), rownames(M2)),], ColSideColors = col_cell_age, cexRow = 0.01, trace = "none", scale = "row", main="24M WT - 6-8W WT")
 dev.off()

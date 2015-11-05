@@ -58,24 +58,35 @@ createToptableResults <- function(lrt){
   # These information will be added together to create the filename.
   firstSplit <- strsplit(lrt$comparison, split = ")")
   secondSplit <- strsplit(firstSplit[[1]][2], split = " -")
-  write.table(rownames(toptable.results), paste("Made_Documents/DE/DE_", firstSplit[[1]][3], "_vs_", secondSplit[[1]][1], ".txt", sep = ""), sep="\n", row.names = F, col.names = F)
+  write.table(rownames(toptable.results), paste("Made_Documents/DE/DE_", firstSplit[[1]][3], "_vs_", secondSplit[[1]][1], ".txt", sep = ""), eol=",\n", quote = F, row.names = F, col.names = F)
   output <- list(toptable, toptable.results)
   return (output)
 } 
 
-toptable1.results <- createToptableResults(lrt01)
-toptable2.results <- createToptableResults(lrt02)
-toptable3.results <- createToptableResults(lrt03)
-toptable4.results <- createToptableResults(lrt04)
-toptable5.results <- createToptableResults(lrt05)
-toptable6.results <- createToptableResults(lrt06)
-toptable7.results <- createToptableResults(lrt07)
-toptable8.results <- createToptableResults(lrt08)
-toptable9.results <- createToptableResults(lrt09)
-toptable10.results <- createToptableResults(lrt10)
-toptable11.results <- createToptableResults(lrt11)
-toptable12.results <- createToptableResults(lrt12)
-
+toptable1 <- createToptableResults(lrt01)
+toptable1.results <- toptable1[[2]]
+toptable2 <- createToptableResults(lrt02)
+toptable2.results <- toptable2[[2]]
+toptable3 <- createToptableResults(lrt03)
+toptable3.results <- toptable3[[2]]
+toptable4 <- createToptableResults(lrt04)
+toptable4.results <- toptable4[[2]]
+toptable5 <- createToptableResults(lrt05)
+toptable5.results <- toptable5[[2]]
+toptable6 <- createToptableResults(lrt06)
+toptable6.results <- toptable6[[2]]
+toptable7 <- createToptableResults(lrt07)
+toptable7.results <- toptable7[[2]]
+toptable8 <- createToptableResults(lrt08)
+toptable8.results <- toptable8[[2]]
+toptable9 <- createToptableResults(lrt09)
+toptable9.results <- toptable9[[2]]
+toptable10 <- createToptableResults(lrt10)
+toptable10.results <- toptable10[[2]]
+toptable11 <- createToptableResults(lrt11)
+toptable11.results <- toptable11[[2]]
+toptable12 <- createToptableResults(lrt12)
+toptable12.results <- toptable12[[2]]
 ####################################################################
 #                      Differential Expression                     #
 ####################################################################
