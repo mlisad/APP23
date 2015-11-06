@@ -8,14 +8,12 @@
 # The data of the effects found with the the linear time design
 # need to be read from the saved files. These files are the younger
 # mice, the older mice and mice of all ages.
-
-
 allGenesLinearInteraction <- NULL
 youngerMiceLinearInteraction <- NULL
 
 allGenesLinearGenotype <- read.table("Made_Documents/All_ages/main_genotype_result.txt", sep = ",")
 allGenesLinearAge <- read.table("Made_Documents/All_ages/main_age_result.txt", sep=",")
-if (length(readLines("Made_Documents/All_ages/interaction_result.txt"))-1 == 0) {
+if (length(readLines("Made_Documents/All_ages/interaction_result.txt"))-1 != 0) {
   allGenesLinearInteraction <- read.table("Made_Documents/All_ages/interaction_result.txt", sep = ",")
 } 
 #allGenesLinearInteraction <- read.table("Made_Documents/All_ages/interaction_result.txt", sep = ",")
@@ -24,7 +22,7 @@ olderMiceLinearAge <- read.table("Made_Documents/12-18-24M_old_mice/main_age_res
 olderMiceLinearInteraction <- read.table("Made_Documents/12-18-24M_old_mice/interaction_result.txt", sep=",")
 youngerMiceLinearGenotype <- read.table("Made_Documents/6_8M-12M_old_mice/main_genotype_result.txt", sep=",")
 youngerMiceLinearAge <- read.table("Made_Documents/6_8M-12M_old_mice/main_age_result.txt", sep=",")
-if (length(readLines("Made_Documents/6_8M-12M_old_mice/interaction_result.txt"))-1 ==0) {
+if (length(readLines("Made_Documents/6_8M-12M_old_mice/interaction_result.txt"))-1 != 0) {
   youngerMiceLinearInteraction <- read.table("Made_Documents/6_8M-12M_old_mice/interaction_result.txt", sep=",")
 } 
 

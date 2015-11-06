@@ -50,8 +50,57 @@ source("../loadingEnsemblData.R")
 # The genes with a FDR below a number of 0.05 are returned.
 filterGenes <- function(tabel) {
   uniqueGenes <- which(tabel[[1]]$FDR < 0.05)
-  uniqueGenes <- tabel[uniqueGenes,]
-  return(uniqueGenes)
+  uniqueGenesList <- tabel[uniqueGenes,]
+  BioM.uniqueGenes <- BioM[uniqueGenes,]
+  data <- list(uniqueGenesList, BioM.uniqueGenes)
+  return(data)
+}
+
+filterResult <- function(tabel, bioMList, calculation) {
+  uniqueGenes <- calculation
+  uniqueGenesList <- data.frame(tabel[uniqueGenes,])
+  BioM.uniqueGenes <- bioMList[uniqueGenes, ]
+  rownames(uniqueGenesList) <- BioM.uniqueGenes[,3]
+  return(uniqueGenesList)
+}
+
+createToptableResults <- function(lrt){
+  # With the use of decideTestsDGE a detection is made to distinguish the up, down al all regulated genes.
+  print(table(decideTestsDGE(lrt, p=0.05, adjust="BH")))
+  # Data is stored within the toptables for further anaylsis.
+  toptable <- topTags(lrt, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
+  # The results from the toptables are checked with the use of the own-made filtergenes function
+  # This function returns the data which contain a FDR value below the 0.05
+  toptable.results <- filterGenes(toptable)
+  geneInfo <- toptable.results[[2]]
+  toptable.results <- toptable.results[[1]]
+  # The comparison of the samples will be split at the ")" sign for the first time,
+  # the second time the 2th string is split at the " -".
+  # this results two genotype and age sets.
+  # These information will be added together to create the filename.
+  firstSplit <- strsplit(lrt$comparison, split = ")")
+  secondSplit <- strsplit(firstSplit[[1]][2], split = " -")
+  write.table(rownames(toptable.results), paste("Made_Documents/DE/DE_", firstSplit[[1]][3], "_vs_", secondSplit[[1]][1], ".txt", sep = ""), eol=",\n", quote = F, row.names = F, col.names = F)
+  output <- list(toptable, toptable.results)
+  return (output)
+} 
+
+plotMostExpr <- function(results, calc1, calc2, amount, path) {
+  results1 <- filterResult(results[[1]], results[[3]], calc1)
+  results2 <- filterResult(results[[2]], results[[4]], calc2)
+  pdf(path)
+  heatmap.2(M3[match(rownames(results1), rownames(M3)), amount], ColSideColors= col_cell_age[amount], cexRow = 1, trace = "none", scale = "row", main="Main effect age")
+  heatmap.2(M3[match(rownames(results2), rownames(M3)), amount], ColSideColors= col_cell_age[amount], cexRow = 1, trace = "none", scale = "row", main="Linear Effect")
+  dev.off()
+}
+
+saveInfoDE <- function(result, fileName1, fileName2) {
+  DE.ExpressionOM_mainAge <- cbind(rownames(result[[1]][[1]]), result[[1]][[1]]$logFC, result[[1]][[1]]$FDR, result[[3]][,3:4])
+  DE.ExpressionOM_Linear <- cbind(rownames(result[[2]][[1]]), result[[2]][[1]]$logFC, result[[2]][[1]]$FDR, result[[4]][,3:4])
+  geneColsOM_mainAge <- c("Genes", "logFC: Main-effect Age","FDR: Main-effect Age", "Gene Symbol", "Gene Description")
+  geneColsOM_mainLinear <- c("Genes", "logFC: Linear Effect Age:Genotype",  "FDR:  Linear Effect Age:Genotype", "Gene Symbol", "Gene Description")
+  write.table(DE.ExpressionOM_mainAge , paste("Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
+  write.table(DE.ExpressionOM_Linear , paste("Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainLinear, sep = "\t")
 }
 ####################################################################
 #                       Estimation Dispersions                     #
@@ -68,6 +117,8 @@ BioM <- BioM[isExpr,]
 dge <- calcNormFactors(dge)
 colnames(dge$counts) <- targets$Samples
 M2 <- cpm(dge, log=TRUE)
+M3 <- M2
+rownames(M3) <- BioM[,3]
 ####################################################################
 #                            MDS Plot                              #
 ####################################################################
@@ -122,6 +173,6 @@ source("Code/EdgeRPCA.R")
 # Checks the two toptable results with the most unique genes.
 # These heatmaps are saved within the heatmap.pdf.
 pdf("Plots/heatmaps_containing_most_genes.pdf") 
-heatmap.2(M2[match(rownames(toptable11.results), rownames(M2)),], ColSideColors = col_cell_age, cexRow = 0.01, trace = "none", scale = "row", main="24M HET - 6-8W HET")
-heatmap.2(M2[match(rownames(toptable12.results), rownames(M2)),], ColSideColors = col_cell_age, cexRow = 0.01, trace = "none", scale = "row", main="24M WT - 6-8W WT")
+heatmap.2(M2[match(rownames(toptable11.results), rownames(M2)),c(4:6, 10:12, 16:18, 22:24)], ColSideColors = col_cell_age[c(4:6, 10:12, 16:18, 22:24)], cexRow = 0.01, trace = "none", scale = "row", main="24M HET - 6-8W HET")
+heatmap.2(M2[match(rownames(toptable12.results), rownames(M2)),c(1:3, 7:9, 13:15, 19:21)], ColSideColors = col_cell_age[c(1:3, 7:9, 13:15, 19:21)], cexRow = 0.01, trace = "none", scale = "row", main="24M WT - 6-8W WT")
 dev.off()
