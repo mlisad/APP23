@@ -15,23 +15,23 @@ fit <- glmFit(dge, design)
 
 # Compares 6-8 week WT against 6-8 week HET
 lrt01 <- glmLRT(fit, contrast = c(1,0,0,0,-1,0,0,0))
-# Compares 12 month WT against 12 month HET
+# Compares 6 month WT against 6 month HET
 lrt02 <- glmLRT(fit, contrast = c(0,1,0,0,0,-1,0,0))
 # Compares 18 month WT against 18 month HET
 lrt03 <- glmLRT(fit, contrast = c(0,0,1,0,0,0,-1,0))
 # Compares 24 month WT against 24 month HET
 lrt04 <- glmLRT(fit, contrast = c(0,0,0,1,0,0,0,-1))
 
-# Compares 12 month HET against 6-8 week HET
+# Compares 6 month HET against 6-8 week HET
 lrt05 <- glmLRT(fit, contrast = c(1,-1,0,0,0,0,0,0))
-# Compares 18 month HET against 12 month HET
+# Compares 18 month HET against 6 month HET
 lrt06 <- glmLRT(fit, contrast = c(0,1,-1,0,0,0,0,0))
 # Compares 24 month HET against 18 month HET
 lrt07 <- glmLRT(fit, contrast = c(0,0,1,-1,0,0,0,0))
 
-# Compares 12 month  WT against 6-8 week WT
+# Compares 6 month  WT against 6-8 week WT
 lrt08 <- glmLRT(fit, contrast = c(0,0,0,0,1,-1,0,0))
-# Compares 18 month WT against 12 month WT
+# Compares 18 month WT against 6 month WT
 lrt09 <- glmLRT(fit, contrast = c(0,0,0,0,0,1,-1,0))
 # Compares 24 month WT against 18 month WT
 lrt10 <- glmLRT(fit, contrast = c(0,0,0,0,0,0,1,-1))
@@ -83,11 +83,11 @@ DE.ExpressionCombi <- cbind(rownames(toptable1[[1]][[1]]), toptable1[[1]][[1]]$l
 ####################################################################
 #                         Creating DE Files                        #
 ####################################################################
-geneColsWT <- c("Genes",  "logFC: 12M WT vs 2M WT", "FDR: 12M WT vs 2M WT", "logFC: 18M WT vs 12M WT", "FDR: 18M WT vs 12M WT", 
+geneColsWT <- c("Genes",  "logFC: 6M WT vs 2M WT", "FDR: 6M WT vs 2M WT", "logFC: 18M WT vs 6M WT", "FDR: 18M WT vs 6M WT", 
                 "logFC: 24M WT vs 18M WT", "FDR: 24M WT vs 18M WT", "logFC: 24M WT vs 2M WT", "FDR: 24M WT vs 2M WT", "Gene Symbol", "Gene Description")
-geneColsHET <- c("Genes", "logFC: 12M HET vs 2M HET", "FDR: 12M HET vs 2M HET", "logFC: 18M HET vs 12M HET", "FDR: 18M HET vs 12M HET", 
+geneColsHET <- c("Genes", "logFC: 6M HET vs 2M HET", "FDR: 6M HET vs 2M HET", "logFC: 18M HET vs 6M HET", "FDR: 18M HET vs 6M HET", 
                  "logFC: 24M HET vs 18M HET", "FDR: 24M HET vs 18M HET", "logFC: 24M HET vs 2M HET", "FDR: 24M HET vs 2M HET", "Gene Symbol", "Gene Description")
-geneColsCombi <- c("Genes", "logFC: 2M WT vs 2M HET","FDR: 2M WT vs 2M HET", "logFC: 12M WT vs 12M HET",  "FDR: 12M WT vs 12M HET", 
+geneColsCombi <- c("Genes", "logFC: 2M WT vs 2M HET","FDR: 2M WT vs 2M HET", "logFC: 6M WT vs 6M HET",  "FDR: 6M WT vs 6M HET", 
                    "logFC: 18M WT vs 18M HET", "FDR: 18M WT vs 18M HET", "logFC: 24M WT vs 24M HET", "FDR: 24M WT vs 24M HET", "Gene Symbol", "Gene Description")
 write.table(DE.ExpressionWT , "Made_Documents/DE_Files/DifferentialGenesWT.txt", row.names = F, col.names = geneColsWT, sep = "\t")
 write.table(DE.ExpressionHET , "Made_Documents/DE_Files/DifferentialGenesHET.txt", row.names = F, col.names = geneColsHET, sep = "\t")

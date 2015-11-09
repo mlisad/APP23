@@ -10,7 +10,7 @@ APP23_data <- APP23_data[order(colnames(APP23_data), decreasing = F )]
 
 # The information of the APP23_data data is stored within a different file.
 # This file contains information like: the sample_nr, the condition, the number of the plate and so on.
-targets <- read.table("/home/mdubbelaar/APP23/Targets.csv", sep=":", header = T)
+targets <- read.table("/home/mdubbelaar/APP23/Targets.csv", sep=",", header = T)
 targets <- targets[order(targets$Sample),]
 ####################################################################
 

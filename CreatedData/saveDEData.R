@@ -17,13 +17,13 @@ if (length(readLines("Made_Documents/All_ages/interaction_result.txt"))-1 != 0) 
   allGenesLinearInteraction <- read.table("Made_Documents/All_ages/interaction_result.txt", sep = ",")
 } 
 #allGenesLinearInteraction <- read.table("Made_Documents/All_ages/interaction_result.txt", sep = ",")
-olderMiceLinearGenotype <- read.table("Made_Documents/12-18-24M_old_mice/main_genotype_result.txt", sep = ",")
-olderMiceLinearAge <- read.table("Made_Documents/12-18-24M_old_mice/main_age_result.txt", sep=",")
-olderMiceLinearInteraction <- read.table("Made_Documents/12-18-24M_old_mice/interaction_result.txt", sep=",")
-youngerMiceLinearGenotype <- read.table("Made_Documents/6_8M-12M_old_mice/main_genotype_result.txt", sep=",")
-youngerMiceLinearAge <- read.table("Made_Documents/6_8M-12M_old_mice/main_age_result.txt", sep=",")
-if (length(readLines("Made_Documents/6_8M-12M_old_mice/interaction_result.txt"))-1 != 0) {
-  youngerMiceLinearInteraction <- read.table("Made_Documents/6_8M-12M_old_mice/interaction_result.txt", sep=",")
+olderMiceLinearGenotype <- read.table("Made_Documents/6-18-24M_old_mice/main_genotype_result.txt", sep = ",")
+olderMiceLinearAge <- read.table("Made_Documents/6-18-24M_old_mice/main_age_result.txt", sep=",")
+olderMiceLinearInteraction <- read.table("Made_Documents/6-18-24M_old_mice/interaction_result.txt", sep=",")
+youngerMiceLinearGenotype <- read.table("Made_Documents/2M-6M_old_mice/main_genotype_result.txt", sep=",")
+youngerMiceLinearAge <- read.table("Made_Documents/2M-6M_old_mice/main_age_result.txt", sep=",")
+if (length(readLines("Made_Documents/2M-6M_old_mice/interaction_result.txt"))-1 != 0) {
+  youngerMiceLinearInteraction <- read.table("Made_Documents/2M-6M_old_mice/interaction_result.txt", sep=",")
 } 
 
 # The unique genenames found within the normal DE are saved with 
@@ -51,9 +51,9 @@ if (!is.null(youngerMiceLinearInteraction) & !is.null(allGenesLinearInteraction)
                          length(youngerMiceLinearGenotype[,1]), length(youngerMiceLinearAge[,1]), length(youngerMiceLinearInteraction[,1]))
 
 # The rownames will indicate with DE it is.
-rownames(unique.Genes) <-c("6.8W_WT-6.8W_HET", "12M_WT-12M_HET", "18M_WT-18M_HET", "24M_WT-24M_HET",
-                            "12M_HET-6.8W_HET", "18M_HET-12M_HET", "24M_HET-18M_HET", "12M_WT-6.8W_WT",
-                            "18M_WT-12M_WT", "24M_WT-18M_WT", "24M_HET-6.8W_HET", "24M_WT-6.8W_WT", "All found genes",
+rownames(unique.Genes) <-c("2M_WT-2M_HET", "6M_WT-6M_HET", "18M_WT-18M_HET", "24M_WT-24M_HET",
+                            "6M_HET-2W_HET", "18M_HET-6M_HET", "24M_HET-18M_HET", "6M_WT-2W_WT",
+                            "18M_WT-6M_WT", "24M_WT-18M_WT", "24M_HET-2M_HET", "24M_WT-2M_WT", "All found genes",
                             "", "Main-effect genotype (ALL)", "Main-effect age (ALL)", "Interaction (ALL)",
                             "Main-effect genotype (olderMice)", "Main-effect age (olderMice)", "Interaction (olderMice)",
                             "Main-effect genotype (youngerMice)", "Main-effect age (youngerMice)", "Interaction (youngerMice)")
@@ -68,9 +68,9 @@ rownames(unique.Genes) <-c("6.8W_WT-6.8W_HET", "12M_WT-12M_HET", "18M_WT-18M_HET
                         length(olderMiceLinearGenotype[,1]), length(olderMiceLinearAge[,1]), length(olderMiceLinearInteraction[,1]), 
                         length(youngerMiceLinearGenotype[,1]), length(youngerMiceLinearAge[,1]))
   
-  rownames(unique.Genes) <-c("6.8W_WT-6.8W_HET", "12M_WT-12M_HET", "18M_WT-18M_HET", "24M_WT-24M_HET",
-                              "12M_HET-6.8W_HET", "18M_HET-12M_HET", "24M_HET-18M_HET", "12M_WT-6.8W_WT",
-                              "18M_WT-12M_WT", "24M_WT-18M_WT", "24M_HET-6.8W_HET", "24M_WT-6.8W_WT", "All found genes",
+  rownames(unique.Genes) <-c("2M_WT-2M_HET", "6M_WT-6M_HET", "18M_WT-18M_HET", "24M_WT-24M_HET",
+                              "6M_HET-2M_HET", "18M_HET-6M_HET", "24M_HET-18M_HET", "6M_WT-2M_WT",
+                              "18M_WT-6M_WT", "24M_WT-18M_WT", "24M_HET-2M_HET", "24M_WT-2M_WT", "All found genes",
                               "", "Main-effect genotype (ALL)", "Main-effect age (ALL)",
                               "Main-effect genotype (olderMice)", "Main-effect age (olderMice)", "Interaction (olderMice)",
                               "Main-effect genotype (youngerMice)", "Main-effect age (youngerMice)")

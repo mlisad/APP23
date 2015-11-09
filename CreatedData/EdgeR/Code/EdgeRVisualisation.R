@@ -28,6 +28,7 @@ library(gplots)
 #               Reading of the data and the targets                #
 ####################################################################
 source("../loadingAppFile.R")
+
 # The data found in loadingAppFile needs some adjustment for further
 # progress. The data needs to be filtered of the genenames within 
 # the column and needs to be set as the column name.
@@ -102,6 +103,19 @@ saveInfoDE <- function(result, fileName1, fileName2) {
   write.table(DE.ExpressionOM_mainAge , paste("Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
   write.table(DE.ExpressionOM_Linear , paste("Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainLinear, sep = "\t")
 }
+
+####################################################################
+#                             Data Check                           #
+####################################################################
+source("../plotColors.R")
+CPMmatrix <- as.matrix(cpm(dge, log = T))
+rownames(CPMmatrix) <- BioM[,3]
+
+appGene <- which(rownames(CPMmatrix)=="App")
+appExpression <- CPMmatrix[appGene,]
+pdf("Plots/AppCheck.pdf")
+plot(appExpression, col=col_cell_age, pch=20, cex=3, ylab = "Expression of App")
+dev.off()
 ####################################################################
 #                       Estimation Dispersions                     #
 ####################################################################
@@ -122,7 +136,6 @@ rownames(M3) <- BioM[,3]
 ####################################################################
 #                            MDS Plot                              #
 ####################################################################
-source("../plotColors.R")
 # The MDS plot is made and saved within a file with the use of pdf()
 # dev.off() is necessary to close the connection to the document.
 pdf("Plots/MDS_plot_age_effect.pdf") 
@@ -173,6 +186,6 @@ source("Code/EdgeRPCA.R")
 # Checks the two toptable results with the most unique genes.
 # These heatmaps are saved within the heatmap.pdf.
 pdf("Plots/heatmaps_containing_most_genes.pdf") 
-heatmap.2(M2[match(rownames(toptable11.results), rownames(M2)),c(4:6, 10:12, 16:18, 22:24)], ColSideColors = col_cell_age[c(4:6, 10:12, 16:18, 22:24)], cexRow = 0.01, trace = "none", scale = "row", main="24M HET - 6-8W HET")
-heatmap.2(M2[match(rownames(toptable12.results), rownames(M2)),c(1:3, 7:9, 13:15, 19:21)], ColSideColors = col_cell_age[c(1:3, 7:9, 13:15, 19:21)], cexRow = 0.01, trace = "none", scale = "row", main="24M WT - 6-8W WT")
+heatmap.2(M2[match(rownames(toptable11.results), rownames(M2)),c(4:6, 10:12, 16:18, 22:24)], ColSideColors = col_cell_age[c(4:6, 10:12, 16:18, 22:24)], cexRow = 0.01, trace = "none", scale = "row", main="24M HET - 2M HET")
+heatmap.2(M2[match(rownames(toptable12.results), rownames(M2)),c(1:3, 7:9, 13:15, 19:21)], ColSideColors = col_cell_age[c(1:3, 7:9, 13:15, 19:21)], cexRow = 0.01, trace = "none", scale = "row", main="24M WT - 2M WT")
 dev.off()

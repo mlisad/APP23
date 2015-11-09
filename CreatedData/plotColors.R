@@ -16,12 +16,12 @@ col_cell_age <- rep("black", dim(targets)[1])
 
 col_cell_age
 # red color
-col_cell_age[targets$Conditie ==  "WT.06_08"] = col=rainbow(265)[20]
-col_cell_age[targets$Conditie ==  "WT.12"] = col=rainbow(265)[15]
+col_cell_age[targets$Conditie ==  "WT.02"] = col=rainbow(265)[20]
+col_cell_age[targets$Conditie ==  "WT.06"] = col=rainbow(265)[15]
 col_cell_age[targets$Conditie ==  "WT.18"] = col=rainbow(265)[10]
 col_cell_age[targets$Conditie ==  "WT.24"] = col=rainbow(265)[1]
 # Blue color
-col_cell_age[targets$Conditie ==  "HET.06_08"] = col=rainbow(265)[145]
-col_cell_age[targets$Conditie ==  "HET.12"] = col=rainbow(265)[150]
+col_cell_age[targets$Conditie ==  "HET.02"] = col=rainbow(265)[145]
+col_cell_age[targets$Conditie ==  "HET.06"] = col=rainbow(265)[150]
 col_cell_age[targets$Conditie ==  "HET.18"] = col=rainbow(265)[155]
 col_cell_age[targets$Conditie ==  "HET.24"] = col=rainbow(265)[160]
