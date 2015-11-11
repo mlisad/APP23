@@ -89,7 +89,7 @@ geneColsHET <- c("Genes", "logFC: 6M HET vs 2M HET", "FDR: 6M HET vs 2M HET", "l
                  "logFC: 24M HET vs 18M HET", "FDR: 24M HET vs 18M HET", "logFC: 24M HET vs 2M HET", "FDR: 24M HET vs 2M HET", "Gene Symbol", "Gene Description")
 geneColsCombi <- c("Genes", "logFC: 2M WT vs 2M HET","FDR: 2M WT vs 2M HET", "logFC: 6M WT vs 6M HET",  "FDR: 6M WT vs 6M HET", 
                    "logFC: 18M WT vs 18M HET", "FDR: 18M WT vs 18M HET", "logFC: 24M WT vs 24M HET", "FDR: 24M WT vs 24M HET", "Gene Symbol", "Gene Description")
-write.table(DE.ExpressionWT , "Made_Documents/DE_Files/DifferentialGenesWT.txt", row.names = F, col.names = geneColsWT, sep = "\t")
-write.table(DE.ExpressionHET , "Made_Documents/DE_Files/DifferentialGenesHET.txt", row.names = F, col.names = geneColsHET, sep = "\t")
-write.table(DE.ExpressionCombi , "Made_Documents/DE_Files/DifferentialGenesCombi.txt", row.names = F, col.names = geneColsCombi, sep = "\t")
+write.table(DE.ExpressionWT , "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesWT.txt", row.names = F, col.names = geneColsWT, sep = "\t")
+write.table(DE.ExpressionHET , "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesHET.txt", row.names = F, col.names = geneColsHET, sep = "\t")
+write.table(DE.ExpressionCombi , "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesCombi.txt", row.names = F, col.names = geneColsCombi, sep = "\t")
 

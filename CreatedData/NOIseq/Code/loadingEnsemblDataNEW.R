@@ -8,13 +8,14 @@
 getEnsembleData <- function(data) {
   data = M1
 # Returns a list of the available Marts
-listMarts()
+#listMarts()
 # Defines the used Mart.
-ensembl=useMart("ensembl")
+#ensembl=useMart("ensembl")
 # Returns the available datasets within ensembl. 
-listDatasets(ensembl)
+#listDatasets(ensembl)
 # Defines the dataset which will be used.
-ensembl = useDataset("mmusculus_gene_ensembl",mart=ensembl)
+#ensembl = useDataset("mmusculus_gene_ensembl",mart=ensembl)
+ensembl = useMart("ENSEMBL_MART_ENSEMBL",dataset="mmusculus_gene_ensembl", host="www.ensembl.org")
 attributes = listAttributes(ensembl)
 #filters = listFilters(ensembl)
 

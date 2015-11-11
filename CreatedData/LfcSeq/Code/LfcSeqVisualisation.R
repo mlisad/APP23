@@ -42,7 +42,7 @@ saveFoundData <- function(data, samples, norm, mapName) {
   pdf(paste("Plots/", mapName, norm, "Heatmap.pdf", sep=""))
   heatmap.2(as.matrix(unique), cexRow = 0.0001,  col = hmcol, trace = "none", scale = "row", main = paste("Data ", data))
   dev.off()
-  write.table(rownames(unique), file = paste("Made_Documents/", mapName, norm, "Genes.txt", sep=""), row.names = F, col.names=F, sep=", ", quote = F)
+  write.table(rownames(unique), file = paste("/home/mdubbelaar/Desktop/APP23_results/LfcSeq/Made_Documents/", mapName, norm, "Genes.txt", sep=""), row.names = F, col.names=F, sep=", ", quote = F)
 }
 
 

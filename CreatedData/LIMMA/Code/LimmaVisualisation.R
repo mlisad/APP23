@@ -13,7 +13,7 @@
 #              Installing all of the necessary packages            #
 ####################################################################
 source("http://bioconductor.org/biocLite.R")
-setwd("/home/mdubbelaar/Desktop/Onderzoek-APP23_RNASEQ/CreatedData/LIMMA/")
+setwd("/home/mdubbelaar/APP23/CreatedData/LIMMA/")
 #install.packages("gplots")
 #install.packages("statmod")
 #biocLite("biomaRt")
@@ -71,7 +71,7 @@ filterGenesWithLimma <- function(tabel) {
 ####################################################################
 # The MDS plot is made and saved within a file with the use of pdf()
 # dev.off() is necessary to close the connection to the document.
-pdf("Plots/MDS_plot.pdf")
+pdf("/home/mdubbelaar/Desktop/APP23_results/LIMMA/Plots/MDS_plot.pdf")
 plotMDS(dge, labels = targets$Conditie, col=as.numeric(targets$Conditie))
 legend("topright", legend = unique(targets$Conditie), col=unique(targets$Conditie), pch=15, cex=.6)
 dev.off()
@@ -90,7 +90,7 @@ source("../saveDEData.R")
 ####################################################################
 # Checks the two toptable results with the most unique genes.
 # These heatmaps are saved within the heatmap.pdf.
-pdf("Plots/heatmaps_contains_most_unique.pdf")
+pdf("/home/mdubbelaar/Desktop/APP23_results/LIMMA/Plots/heatmaps_contains_most_unique.pdf")
 heatmap.2(M2[match(rownames(toptable7.results), rownames(M2)),], ColSideColors = col_cell_age, cexRow = 0.01, trace = "none", scale = "row", main="24M HET-18M HET")
 heatmap.2(M2[match(rownames(toptable11.results), rownames(M2)),], ColSideColors = col_cell_age, cexRow = 0.01, trace = "none", scale = "row", main="24M HET- 6-8W HET")
 dev.off()

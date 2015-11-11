@@ -81,7 +81,7 @@ createToptableResults <- function(lrt){
   # These information will be added together to create the filename.
   firstSplit <- strsplit(lrt$comparison, split = ")")
   secondSplit <- strsplit(firstSplit[[1]][2], split = " -")
-  write.table(rownames(toptable.results), paste("Made_Documents/DE/DE_", firstSplit[[1]][3], "_vs_", secondSplit[[1]][1], ".txt", sep = ""), eol=",\n", quote = F, row.names = F, col.names = F)
+  write.table(rownames(toptable.results), paste("/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE/DE_", firstSplit[[1]][3], "_vs_", secondSplit[[1]][1], ".txt", sep = ""), eol=",\n", quote = F, row.names = F, col.names = F)
   output <- list(toptable, toptable.results)
   return (output)
 } 
@@ -100,8 +100,8 @@ saveInfoDE <- function(result, fileName1, fileName2) {
   DE.ExpressionOM_Linear <- cbind(rownames(result[[2]][[1]]), result[[2]][[1]]$logFC, result[[2]][[1]]$FDR, result[[4]][,3:4])
   geneColsOM_mainAge <- c("Genes", "logFC: Main-effect Age","FDR: Main-effect Age", "Gene Symbol", "Gene Description")
   geneColsOM_mainLinear <- c("Genes", "logFC: Linear Effect Age:Genotype",  "FDR:  Linear Effect Age:Genotype", "Gene Symbol", "Gene Description")
-  write.table(DE.ExpressionOM_mainAge , paste("Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
-  write.table(DE.ExpressionOM_Linear , paste("Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainLinear, sep = "\t")
+  write.table(DE.ExpressionOM_mainAge , paste("/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
+  write.table(DE.ExpressionOM_Linear , paste("/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainLinear, sep = "\t")
 }
 
 ####################################################################

@@ -44,7 +44,7 @@ calculateMainEffectAge <- function(dds, fileName, dataType) {
   # The name of the comparison is used to get the genes and the unique
   # genes within these results are saved into a txt file.
   if (dataType != "old") {
-    mainEffectAge1 <- results(dds, name = "age_12_vs_2", alpha = 0.05)
+    mainEffectAge1 <- results(dds, name = "age_6_vs_2", alpha = 0.05)
     mainEffectAge1 <- getUniqueGenes(mainEffectAge1)
     if (dataType == "all") {
       mainEffectAge2 <- results(dds, name =  "age_18_vs_2", alpha = 0.05)
@@ -57,9 +57,9 @@ calculateMainEffectAge <- function(dds, fileName, dataType) {
       write.table(rownames(mainEffectAge1), fileName, row.names = F, col.names=F, sep=", ", quote = F)
     }
   } else {
-    mainEffectAge1 <- results(dds, name =  "age_18_vs_12", alpha = 0.05)
+    mainEffectAge1 <- results(dds, name =  "age_18_vs_6", alpha = 0.05)
     mainEffectAge1 <- getUniqueGenes(mainEffectAge1)
-    mainEffectAge2 <- results(dds, name =  "age_24_vs_12",  alpha = 0.05)
+    mainEffectAge2 <- results(dds, name =  "age_24_vs_6",  alpha = 0.05)
     mainEffectAge2 <- getUniqueGenes(mainEffectAge2)
     mainEffectAge <- unique(c(row.names(mainEffectAge1), row.names(mainEffectAge2)))
     write.table(mainEffectAge, fileName, row.names = F, col.names=F, sep=", ", quote = F)
@@ -78,7 +78,7 @@ calculateInteractionEffect <- function(dds, fileName, dataType) {
     interaction2 <- results(dds, name="genotypeHET.age24", alpha=0.05)
     interaction2 <- getUniqueGenes(interaction2)
     if (dataType == "all") {
-      interaction3 <- results(dds, name="genotypeHET.age12", alpha=0.05)
+      interaction3 <- results(dds, name="genotypeHET.age6", alpha=0.05)
       interaction3 <- getUniqueGenes(interaction1)
       interaction <- unique(c(row.names(interaction1), row.names(interaction2), row.names(interaction3)))
       write.table(interaction, fileName, row.names = F, col.names=F, sep=", ", quote = F)
@@ -87,7 +87,7 @@ calculateInteractionEffect <- function(dds, fileName, dataType) {
       write.table(interaction, fileName, row.names = F, col.names=F, sep=", ", quote = F)
     }
   } else {
-    interaction <- results(dds, name="genotypeHET.age12", alpha=0.05)
+    interaction <- results(dds, name="genotypeHET.age6", alpha=0.05)
     interaction <- getUniqueGenes(interaction)
     write.table(rownames(interaction), fileName, row.names = F, col.names=F, sep=", ", quote = F)
   }
@@ -109,17 +109,17 @@ sampleAge <- factor(targets$Age)
 # This table is used by the function DESeqDataSetFromHTSeqCount to 
 # create the right comparisons.
 sampleTable <- data.frame(sampleName=sampleFiles, fileName=sampleFiles, genotype=sampleGenotype, age=sampleAge)
-calculateDds(sampleTable, "Made_Documents/All_ages/main_genotype_result.txt", "Made_Documents/All_ages/main_age_result.txt", 
-                   "Made_Documents/All_ages/interaction_result.txt", "all")
+calculateDds(sampleTable, "/home/mdubbelaar/Desktop/APP23_results/DEseq2/Made_Documents/All_ages/main_genotype_result.txt", "/home/mdubbelaar/Desktop/APP23_results/DEseq2/Made_Documents/All_ages/main_age_result.txt", 
+                   "/home/mdubbelaar/Desktop/APP23_results/DEseq2/Made_Documents/All_ages/interaction_result.txt", "all")
 ####################################################################
 #                  12 months, 18 months and 24 months              #
 ####################################################################
 sampleTable2 <- data.frame(sampleName=sampleFiles[7:24], fileName=sampleFiles[7:24], genotype=sampleGenotype[7:24], age=factor(targets$Age[7:24]))
-calculateDds(sampleTable2, "Made_Documents/12-18-24M_old_mice/main_genotype_result.txt", "Made_Documents/12-18-24M_old_mice/main_age_result.txt", 
-                            "Made_Documents/12-18-24M_old_mice/interaction_result.txt", "old")
+calculateDds(sampleTable2, "/home/mdubbelaar/Desktop/APP23_results/DEseq2/Made_Documents/6-18-24M_old_mice/main_genotype_result.txt", "/home/mdubbelaar/Desktop/APP23_results/DEseq2/Made_Documents/6-18-24M_old_mice/main_age_result.txt", 
+                            "/home/mdubbelaar/Desktop/APP23_results/DEseq2/Made_Documents/6-18-24M_old_mice/interaction_result.txt", "old")
 ####################################################################
 #                        6-8 weeks and 12 months                   #
 ####################################################################
 sampleTable3 <- data.frame(sampleName=sampleFiles[1:12], fileName=sampleFiles[1:12], genotype=sampleGenotype[1:12], age=factor(sampleAge[1:12]))
-calculateDds(sampleTable3, "Made_Documents/6_8M-12M_old_mice/main_genotype_result.txt", "Made_Documents/6_8M-12M_old_mice/main_age_result.txt", 
-                           "Made_Documents/6_8M-12M_old_mice/interaction_result.txt", "young")
+calculateDds(sampleTable3, "/home/mdubbelaar/Desktop/APP23_results/DEseq2/Made_Documents/2M-6M_old_mice/main_genotype_result.txt", "/home/mdubbelaar/Desktop/APP23_results/DEseq2/Made_Documents/2M-6M_old_mice/main_age_result.txt", 
+                           "/home/mdubbelaar/Desktop/APP23_results/DEseq2/Made_Documents/2M-6M_old_mice/interaction_result.txt", "young")

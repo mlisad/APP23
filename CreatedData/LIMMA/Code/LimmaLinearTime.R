@@ -65,8 +65,8 @@ genotypeGroup <- factor(targets$Genotype)
 genotypeGroup <- relevel(genotypeGroup, "WT")
 design <- model.matrix(~genotypeGroup*targets$Age)
 
-calculateEffectsLimma(dge, design, "Made_Documents/All_ages/main_genotype_result.txt", "Made_Documents/All_ages/main_age_result.txt"
-                        , "Made_Documents/All_ages/interaction_result.txt", "Plots/linear_time_heatmaps/All_ages_heatmaps.pdf" )
+calculateEffectsLimma(dge, design, "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Made_Documents/All_ages/main_genotype_result.txt", "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Made_Documents/All_ages/main_age_result.txt"
+                        , "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Made_Documents/All_ages/interaction_result.txt", "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Plots/linear_time_heatmaps/All_ages_heatmaps.pdf" )
 ####################################################################
 #                   All results without 6-8 weeks                  #
 ####################################################################
@@ -76,8 +76,8 @@ calculateEffectsLimma(dge, design, "Made_Documents/All_ages/main_genotype_result
 genotypeOldMiceGroup <- factor(targets$Genotype[targets$Age != 2])
 genotypeOldMiceGroup <- relevel(genotypeOldMiceGroup, "WT")
 oldMiceDesign <- model.matrix(~genotypeOldMiceGroup*targets$Age[targets$Age != 2])
-calculateEffectsLimma(dge[,7:24], oldMiceDesign, "Made_Documents/12-18-24M_old_mice/main_genotype_result.txt", "Made_Documents/12-18-24M_old_mice/main_age_result.txt"
-                        , "Made_Documents/12-18-24M_old_mice/interaction_result.txt", "Plots/linear_time_heatmaps/old_mice_heatmaps.pdf" )
+calculateEffectsLimma(dge[,7:24], oldMiceDesign, "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Made_Documents/6-18-24M_old_mice/main_genotype_result.txt", "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Made_Documents/6-18-24M_old_mice/main_age_result.txt"
+                        , "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Made_Documents/6-18-24M_old_mice/interaction_result.txt", "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Plots/linear_time_heatmaps/old_mice_heatmaps.pdf" )
 ####################################################################
 #             All results with 6-8 weeks and 12 months             #
 ####################################################################
@@ -87,6 +87,6 @@ calculateEffectsLimma(dge[,7:24], oldMiceDesign, "Made_Documents/12-18-24M_old_m
 # releveled to make sure that the WT will be used as the intercept.
 genotypeYoungMiceGroup <- factor(rep(c(rep("WT",3), rep("HET",3)), 2))
 genotypeYoungMiceGroup <- relevel(genotypeYoungMiceGroup, "WT")
-youngMiceDesign <- model.matrix(~genotypeYoungMiceGroup*c(targets$Age[targets$Age == "2" ], targets$Age[targets$Age == "12"]))
-calculateEffectsLimma(dge[,1:12], youngMiceDesign, "Made_Documents/6_8M-12M_old_mice/main_genotype_result.txt", "Made_Documents/6_8M-12M_old_mice/main_age_result.txt"
-                        , "Made_Documents/6_8M-12M_old_mice/interaction_result.txt", "Plots/linear_time_heatmaps/young_mice_heatmaps.pdf" )
+youngMiceDesign <- model.matrix(~genotypeYoungMiceGroup*c(targets$Age[targets$Age == "2" ], targets$Age[targets$Age == "6"]))
+calculateEffectsLimma(dge[,1:12], youngMiceDesign, "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Made_Documents/2M-6M_old_mice/main_genotype_result.txt", "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Made_Documents/2M-6M_old_mice/main_age_result.txt"
+                        , "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Made_Documents/2M-6M_old_mice/interaction_result.txt", "/home/mdubbelaar/Desktop/APP23_results/LIMMA/Plots/linear_time_heatmaps/young_mice_heatmaps.pdf" )

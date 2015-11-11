@@ -13,37 +13,37 @@ fit <- lmFit(v, design)
 
 # The cont.matrix consists of all comaprisons which need to be made.
 # The DE will be defined and the contrast is shown behind it.
-cont.matrix <- cbind("6_8W.WTvs6_8.W.HET"=c(1,0,0,0,-1,0,0,0),
-                     "12M.WTvs12M.HET"=c(0,1,0,0,0,-1,0,0),
+cont.matrix <- cbind("2M.WTvs2M.HET"=c(1,0,0,0,-1,0,0,0),
+                     "6M.WTvs6M.HET"=c(0,1,0,0,0,-1,0,0),
                      "18M.WTvs18M.HET"=c(0,0,1,0,0,0,-1,0),
                      "24M.WTvs24M.HET"=c(0,0,0,1,0,0,0,-1),
-                     "12M.HETvs6_8W.HET"=c(1,-1,0,0,0,0,0,0),
-                     "18M.HETvs12M.HET"=c(0,1,-1,0,0,0,0,0),
+                     "6M.HETvs2M.HET"=c(1,-1,0,0,0,0,0,0),
+                     "18M.HETvs6M.HET"=c(0,1,-1,0,0,0,0,0),
                      
                      "24M.HETvs18M.HET"= c(0,0,1,-1,0,0,0,0),
-                     "12M.WTvs6_8W.WT"=c(0,0,0,0,1,-1,0,0),
-                     "18M.WTvs12M.WT"=c(0,0,0,0,0,1,-1,0),
+                     "6M.WTvs2M.WT"=c(0,0,0,0,1,-1,0,0),
+                     "18M.WTvs6M.WT"=c(0,0,0,0,0,1,-1,0),
                      "24M.WTvs18M.WT"=c(0,0,0,0,0,0,1,-1),
-                     "24M.HETvs6_8W.HET"=c(1,0,0,-1,0,0,0,0),
-                     "24M.WTvs6_8W.WT"=c(0,0,0,0,1,0,0,-1))
+                     "24M.HETvs2M.HET"=c(1,0,0,-1,0,0,0,0),
+                     "24M.WTvs2M.WT"=c(0,0,0,0,1,0,0,-1))
 ########################################################################################################################################
 # The fit is made with the use of the eBayes function (note not ebayes this causes errors).
 fit2 <- eBayes(contrasts.fit(fit, cont.matrix))
 # Data is stored within the tables for further anaylsis.
 # The coef is defined, n = describes the amount of genes which can be saved within the table and the sorting is none
 # the adjusted.method is not used, because the default is "BH".
-limma.table1 <- topTable(fit2, coef = "6_8W.WTvs6_8.W.HET", n=Inf, sort.by="none")
-limma.table2 <- topTable(fit2, coef = "12M.WTvs12M.HET", n=Inf, sort.by="none")
+limma.table1 <- topTable(fit2, coef = "2M.WTvs2M.HET", n=Inf, sort.by="none")
+limma.table2 <- topTable(fit2, coef = "6M.WTvs6M.HET", n=Inf, sort.by="none")
 limma.table3 <- topTable(fit2, coef = "18M.WTvs18M.HET", n=Inf, sort.by="none")
 limma.table4 <- topTable(fit2, coef = "24M.WTvs24M.HET", n=Inf, sort.by="none")
-limma.table5 <- topTable(fit2, coef = "12M.HETvs6_8W.HET", n=Inf, sort.by="none")
-limma.table6 <- topTable(fit2, coef = "18M.HETvs12M.HET", n=Inf, sort.by="none")
+limma.table5 <- topTable(fit2, coef = "6M.HETvs2M.HET", n=Inf, sort.by="none")
+limma.table6 <- topTable(fit2, coef = "18M.HETvs6M.HET", n=Inf, sort.by="none")
 limma.table7 <- topTable(fit2, coef = "24M.HETvs18M.HET", n=Inf, sort.by="none")
-limma.table8 <- topTable(fit2, coef = "12M.WTvs6_8W.WT", n=Inf, sort.by="none")
-limma.table9 <- topTable(fit2, coef = "18M.WTvs12M.WT", n=Inf, sort.by="none")
+limma.table8 <- topTable(fit2, coef = "6M.WTvs2M.WT", n=Inf, sort.by="none")
+limma.table9 <- topTable(fit2, coef = "18M.WTvs6M.WT", n=Inf, sort.by="none")
 limma.table10 <- topTable(fit2, coef = "24M.WTvs18M.WT", n=Inf, sort.by="none")
-limma.table11 <- topTable(fit2, coef = "24M.HETvs6_8W.HET", n=Inf, sort.by="none")
-limma.table12 <- topTable(fit2, coef = "24M.WTvs6_8W.WT", n=Inf, sort.by="none")
+limma.table11 <- topTable(fit2, coef = "24M.HETvs2M.HET", n=Inf, sort.by="none")
+limma.table12 <- topTable(fit2, coef = "24M.WTvs2M.WT", n=Inf, sort.by="none")
 ########################################################################################################################################
 # The results from the toptables are checked with the use of the own-made filtergenes function
 # This function returns the data which contain a p-value below the 0.05

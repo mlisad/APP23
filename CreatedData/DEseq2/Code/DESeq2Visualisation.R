@@ -10,7 +10,7 @@
 ####################################################################
 #                     Loading necessary items                      #
 ####################################################################
-setwd("/home/mdubbelaar/Desktop/Onderzoek-APP23_RNASEQ/CreatedData/DEseq2/")
+setwd("/home/mdubbelaar/APP23/CreatedData/DEseq2/")
 source("http://bioconductor.org/biocLite.R")
 #biocLite("biomaRt")
 #biocLite("DESeq2")
@@ -25,7 +25,7 @@ library("gplots")
 ####################################################################
 directory <-  "/media/mdubbelaar/6CEC0BDEEC0BA186/1507_Holtman_RNAseq/run01/results/expression/perSampleExpression/"
 sampleFiles <- grep("sample", list.files(directory), value = T)
-targets <- read.table("/home/mdubbelaar/Desktop/Onderzoek-APP23_RNASEQ/Targets.csv", sep=":", header = T)
+targets <- read.table("/home/mdubbelaar/APP23/Targets.csv", sep=",", header = T)
 ####################################################################
 #                        Necessary functions                       #
 ####################################################################
@@ -82,7 +82,7 @@ select <- order(rowMeans(counts(dds, normalized=T)), decreasing = T)[1:30]
 # hmcol makes sure that the heatmaps get a nice color.
 hmcol <- colorRampPalette(brewer.pal(9, "GnBu"))(100)
 
-pdf("Plots/heatmaps_30_mostExpressedGenes.pdf")
+pdf("/home/mdubbelaar/Desktop/APP23_results/DEseq2/Plots/heatmaps_30_mostExpressedGenes.pdf")
 # The heatmap shows data of raw counts of the 30 most expressed genes
 heatmap.2(counts(dds, normalized=T)[select,], col=hmcol,
           scale = "row", trace = "none", margin=c(8,9), cexRow = 0.8, cexCol = 0.6, main="Raw counts")
@@ -105,13 +105,13 @@ rownames(mat) <- colnames(mat) <- with(colData(dds),
 # the function on hclust within the sample-to-sample plot
 # is to cluster the samples together.
 hc <- hclust(distsRL)
-pdf("Plots/Sample-to-sample_distances.pdf")
+pdf("/home/mdubbelaar/Desktop/APP23_results/DEseq2/Plots/Sample-to-sample_distances.pdf")
 heatmap.2(mat, Rowv = as.dendrogram(hc),
           symm = T, trace = "none", col= rev(hmcol))
 dev.off()
 ####################################################################
 # The plotPCA helps to check for batch effects.
-pdf("Plots/PCA_plot.pdf")
+pdf("/home/mdubbelaar/Desktop/APP23_results/DEseq2/Plots/PCA_plot.pdf")
 plotPCA(rld)
 dev.off()
 ####################################################################
@@ -121,7 +121,7 @@ plotDispEsts(dds)
 #                      Benjamini-Hochberg Plot                     #
 ####################################################################
 # The Benjamini-Hochberg multiple testing adjustment procedure graphical illustration.
-use <- res$baseMean > attr(res, "filterThreshold")
+use <- res$baseMean 
 resFilt <- res[use & !is.na(res$pvalue),]
 orderInPlot <- order(resFilt$pvalue)
 showInPlot <- (resFilt$pvalue[orderInPlot]) <= 0.08
@@ -130,7 +130,7 @@ alpha <- 0.05
 # The black line shows the p-values vs their rank.
 # The smallest p-value can be found in the bottom left corner.
 # The red line is the slope (alpha (False Discovery Rate)/ n (the number of tests))
-pdf("Plots/Benjamini-Hochberg_plot.pdf")
+pdf("/home/mdubbelaar/Desktop/APP23_results/DEseq2/Plots/Benjamini-Hochberg_plot.pdf")
 plot(seq(along=which(showInPlot)), resFilt$pvalue[orderInPlot][showInPlot],
      pch=".", xlab = expression(rank(p[i])), ylab=expression(p[i]))
 abline(a=0, b=alpha/length(resFilt$pvalue), col="red3", lwd=2)

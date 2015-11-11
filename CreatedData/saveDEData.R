@@ -13,7 +13,7 @@ youngerMiceLinearInteraction <- NULL
 
 allGenesLinearGenotype <- read.table("Made_Documents/All_ages/main_genotype_result.txt", sep = ",")
 allGenesLinearAge <- read.table("Made_Documents/All_ages/main_age_result.txt", sep=",")
-if (length(readLines("Made_Documents/All_ages/interaction_result.txt"))-1 != 0) {
+if (length(readLines("Made_Documents/All_ages/interaction_result.txt")) != 0) {
   allGenesLinearInteraction <- read.table("Made_Documents/All_ages/interaction_result.txt", sep = ",")
 } 
 #allGenesLinearInteraction <- read.table("Made_Documents/All_ages/interaction_result.txt", sep = ",")
@@ -22,7 +22,7 @@ olderMiceLinearAge <- read.table("Made_Documents/6-18-24M_old_mice/main_age_resu
 olderMiceLinearInteraction <- read.table("Made_Documents/6-18-24M_old_mice/interaction_result.txt", sep=",")
 youngerMiceLinearGenotype <- read.table("Made_Documents/2M-6M_old_mice/main_genotype_result.txt", sep=",")
 youngerMiceLinearAge <- read.table("Made_Documents/2M-6M_old_mice/main_age_result.txt", sep=",")
-if (length(readLines("Made_Documents/2M-6M_old_mice/interaction_result.txt"))-1 != 0) {
+if (length(readLines("Made_Documents/2M-6M_old_mice/interaction_result.txt")) != 0) {
   youngerMiceLinearInteraction <- read.table("Made_Documents/2M-6M_old_mice/interaction_result.txt", sep=",")
 } 
 

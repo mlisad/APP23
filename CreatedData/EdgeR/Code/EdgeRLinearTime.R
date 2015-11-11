@@ -75,7 +75,7 @@ Group <- relevel(Group, "WT")
 design.timepoints <- model.matrix(~Group*targets$Age)
 dge.timepoints <- estimateGLMCommonDisp(dge, design.timepoints)
 dge.timepoints <- estimateGLMTrendedDisp(dge.timepoints, design.timepoints)
-calculateMaineffectsInteraction(dge.timepoints, design.timepoints, "Made_Documents/All_ages/", "Plots/linear_time_heatmaps/all_ages_heatmaps.pdf", c(1:24))
+calculateMaineffectsInteraction(dge.timepoints, design.timepoints, "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/All_ages/", "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/linear_time_heatmaps/all_ages_heatmaps.pdf", c(1:24))
 
 ####################################################################
 #    Results with a design Genotype * Time without 6-8 weeks       #
@@ -88,11 +88,11 @@ olderGroup <- relevel(olderGroup, "WT")
 designOlderMice <- model.matrix(~olderGroup*targets$Age[targets$Age != "2"])
 dgeOlderMice <- estimateGLMCommonDisp(dge[,7:24], designOlderMice)
 dgeOlderMice <- estimateGLMTrendedDisp(dgeOlderMice, designOlderMice)
-resultsOlderMice <- calculateMaineffectsInteraction(dgeOlderMice, designOlderMice, "Made_Documents/6-18-24M_old_mice/", "Plots/linear_time_heatmaps/old_mice_heatmaps.pdf", c(7:24))
+resultsOlderMice <- calculateMaineffectsInteraction(dgeOlderMice, designOlderMice, "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/6-18-24M_old_mice/", "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/linear_time_heatmaps/old_mice_heatmaps.pdf", c(7:24))
 
 saveInfoDE(resultsOlderMice, "DifferentialGenesMainAgeOldMice.txt", "DifferentialGenesLinearOldMice.txt")
 plotMostExpr(resultsOlderMice, which(resultsOlderMice[[1]][[1]]$FDR < 0.01 & resultsOlderMice[[1]][[1]]$logFC > .075), which(resultsOlderMice[[2]][[1]]$FDR < 0.01 & resultsOlderMice[[2]][[1]]$logFC > .05),
-             7:24, "Plots/30mostexpressedGenes/AgeAndLinearOld.pdf")
+             7:24, "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/30mostexpressedGenes/AgeAndLinearOld.pdf")
 ####################################################################
 #   Results with a design Genotype * Time without 18 & 24 months   #
 ####################################################################
@@ -103,8 +103,8 @@ youngerGroup <- relevel(youngerGroup, "WT")
 designYoungerMice <- model.matrix(~youngerGroup*c(targets$Age[targets$Age == "2" ], targets$Age[targets$Age == "6"]))
 dgeYoungerMice <- estimateGLMCommonDisp(dge[,1:12], designYoungerMice)
 dgeYoungerMice <- estimateGLMTrendedDisp(dgeYoungerMice, designYoungerMice)
-resultsYoungerMice <- calculateMaineffectsInteraction(dgeYoungerMice, designYoungerMice, "Made_Documents/2M-6M_old_mice/","Plots/linear_time_heatmaps/young_mice_heatmaps.pdf", c(1:12))
+resultsYoungerMice <- calculateMaineffectsInteraction(dgeYoungerMice, designYoungerMice, "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/2M-6M_old_mice/","/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/linear_time_heatmaps/young_mice_heatmaps.pdf", c(1:12))
 
 saveInfoDE(resultsOlderMice, "DifferentialGenesMainAgeYoungMice.txt", "DifferentialGenesLinearYoungMice.txt")
 plotMostExpr(resultsYoungerMice, which(resultsYoungerMice[[1]][[1]]$FDR < 0.01 & resultsYoungerMice[[1]][[1]]$logFC > .15), which(resultsYoungerMice[[2]][[1]]$FDR < 0.05),
-             1:12, "Plots/30mostexpressedGenes/AgeAndLinearYoung.pdf")
+             1:12, "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/30mostexpressedGenes/AgeAndLinearYoung.pdf")

@@ -9,7 +9,7 @@
 #              Installing all of the necessary packages            #
 ####################################################################
 source("http://bioconductor.org/biocLite.R")
-setwd("/home/mdubbelaar/Desktop/Onderzoek-APP23_RNASEQ/CreatedData/NOIseq/")
+setwd("/home/mdubbelaar/APP23/CreatedData/NOIseq/")
 #biocLite("NOISeq")
 #biocLite("biomaRt")
 library("NOISeq")
@@ -166,6 +166,6 @@ write.table(rownames(myNoiSeq.degUp), paste(pathDoc, "DEPlotsUpReg.txt",  sep=""
 write.table(rownames(myNoiSeq.degDown), paste(pathDoc, "DEPlotsDownReg.txt",  sep=""), row.names = F, col.names=F, eol=",\n", quote = F)
 }
 ####################################################################
-createFunction(M1, "Plots/All_mice/", "Made_Documents/All_ages/", "All")
-createFunction(M1[,7:24], "Plots/Old_mice/", "Made_Documents/12-18-24M_old_mice/", "Old")
-createFunction(M1[,1:12], "Plots/Young_mice/", "Made_Documents/6_8M-12M_old_mice/","Young")
+createFunction(M1, "/home/mdubbelaar/Desktop/APP23_results/NOIseq/Plots/All_mice/", "/home/mdubbelaar/Desktop/APP23_results/NOIseq/Made_Documents/All_ages/", "All")
+createFunction(M1[,7:24], "/home/mdubbelaar/Desktop/APP23_results/NOIseq/Plots/Old_mice/", "/home/mdubbelaar/Desktop/APP23_results/NOIseq/Made_Documents/6-18-24M_old_mice/", "Old")
+createFunction(M1[,1:12], "/home/mdubbelaar/Desktop/APP23_results/NOIseq/Plots/Young_mice/", "/home/mdubbelaar/Desktop/APP23_results/NOIseq/Made_Documents/2M-6M_old_mice/","Young")
