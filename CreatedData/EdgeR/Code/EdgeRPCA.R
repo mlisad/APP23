@@ -9,6 +9,8 @@
 #install.packages("rgl")
 #install.packages("gplots")
 library(rgl)
+
+pcaPlot <- function(pathway) {
 ####################################################################
 #                       Preparing data for PCA                     #
 ####################################################################
@@ -25,4 +27,5 @@ open3d()
 # The PCA plot is made with the use of the amount of samples.
 plot3d(pca$x, col=col_cell_age, size = "5")
 # rgl.postscript writes the current figure into a pdf (so you can rotate the plot before saving). 
-rgl.postscript("/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/PCA.pdf", "pdf")
+rgl.postscript(paste(pathway, "Plots/PCA.pdf", sep=""), "pdf")
+}

@@ -11,6 +11,8 @@
 allGenesLinearInteraction <- NULL
 youngerMiceLinearInteraction <- NULL
 
+setwd("/home/mdubbelaar/Desktop/Results/APP23/")
+
 allGenesLinearGenotype <- read.table("Made_Documents/All_ages/main_genotype_result.txt", sep = ",")
 allGenesLinearAge <- read.table("Made_Documents/All_ages/main_age_result.txt", sep=",")
 if (length(readLines("Made_Documents/All_ages/interaction_result.txt")) != 0) {
@@ -78,3 +80,5 @@ rownames(unique.Genes) <-c("2M_WT-2M_HET", "6M_WT-6M_HET", "18M_WT-18M_HET", "24
 ####################################################################
 # The data is written to a csv file, this can be used for further research.
 write.table(unique.Genes, "Made_Documents/Amount_Differential_Expression.csv", col.names=F, sep=":")
+
+setwd("/home/mdubbelaar/APP23/CreatedData/EdgeR/")

@@ -139,4 +139,5 @@ dev.off()
 #                     Calculate linear timepoints                  #
 ####################################################################
 source("Code/DESeq2LinearTime.R")
+setwd("/home/mdubbelaar/Desktop/APP23_results/DEseq2/")
 source("../saveDEData.R")

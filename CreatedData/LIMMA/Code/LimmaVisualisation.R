@@ -84,7 +84,9 @@ source("../plotColors.R")
 ####################################################################
 source("Code/LimmaLinearTime.R")
 source("Code/LimmaDispersions.R")
+setwd("/home/mdubbelaar/Desktop/APP23_results/LIMMA/")
 source("../saveDEData.R")
+setwd("/home/mdubbelaar/APP23/CreatedData/LIMMA/")
 ####################################################################
 #                            Heatmaps                              #
 ####################################################################

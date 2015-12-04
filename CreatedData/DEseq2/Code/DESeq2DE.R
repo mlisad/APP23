@@ -8,6 +8,7 @@
 # to use this data in the design.
 sampleCondition <- factor(targets$Conditie)
 sampleTable <- data.frame(sampleName=sampleFiles, fileName=sampleFiles, condition=sampleCondition)
+
 # DESeqDataSetFromHTSeqCount is used to store input values, intermediate .
 # calculations and results of the DE analysis.
 # The data will be filtered and normalized with the own made normalizeData function.

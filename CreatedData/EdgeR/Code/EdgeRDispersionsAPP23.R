@@ -69,6 +69,16 @@ toptable11.results <- toptable11[[2]]
 toptable12 <- createToptableResults(lrt12)
 toptable12.results <- toptable12[[2]]
 ####################################################################
+#                            Heatmaps                              #
+####################################################################
+# Checks the two toptable results with the most unique genes.
+# These heatmaps are saved within the heatmap.pdf.
+pdf("/home/mdubbelaar/Desktop/Results/APP23/Plots/heatmaps_containing_most_genes.pdf") 
+heatmap.2(M2[match(rownames(toptable11.results), rownames(M2)),c(4:6, 10:12, 16:18, 22:24)], ColSideColors = col_cell_age[c(4:6, 10:12, 16:18, 22:24)], cexRow = 0.01, trace = "none", scale = "row", main="24M HET - 2M HET")
+heatmap.2(M2[match(rownames(toptable12.results), rownames(M2)),c(1:3, 7:9, 13:15, 19:21)], ColSideColors = col_cell_age[c(1:3, 7:9, 13:15, 19:21)], cexRow = 0.01, trace = "none", scale = "row", main="24M WT - 2M WT")
+dev.off()
+
+####################################################################
 #                      Differential Expression                     #
 ####################################################################
 
@@ -91,5 +101,5 @@ geneColsCombi <- c("Genes", "logFC: 2M WT vs 2M HET","FDR: 2M WT vs 2M HET", "lo
                    "logFC: 18M WT vs 18M HET", "FDR: 18M WT vs 18M HET", "logFC: 24M WT vs 24M HET", "FDR: 24M WT vs 24M HET", "Gene Symbol", "Gene Description")
 write.table(DE.ExpressionWT , "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesWT.txt", row.names = F, col.names = geneColsWT, sep = "\t")
 write.table(DE.ExpressionHET , "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesHET.txt", row.names = F, col.names = geneColsHET, sep = "\t")
-write.table(DE.ExpressionCombi , "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesCombi.txt", row.names = F, col.names = geneColsCombi, sep = "\t")
+write.table(DE.ExpressionCombi , "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesHET-WT.txt", row.names = F, col.names = geneColsCombi, sep = "\t")
 

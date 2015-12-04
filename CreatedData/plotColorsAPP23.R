@@ -5,6 +5,7 @@
 # Purpose   : Creating a color palette which can be used in multiple
 #             files.
 ####################################################################
+
 # A repetition will be made for each available target.
 col_cell_age <- rep("black", dim(targets)[1])
 # A contrast needs to be made for 2 different genotypes (APP and WT)
@@ -14,7 +15,6 @@ col_cell_age <- rep("black", dim(targets)[1])
 # mice will be displayed with a blue color. The different 
 # ages will differ from light (young mice) to dark (old mice).
 
-col_cell_age
 # red color
 col_cell_age[targets$Conditie ==  "WT.02"] = col=rainbow(265)[20]
 col_cell_age[targets$Conditie ==  "WT.06"] = col=rainbow(265)[15]
