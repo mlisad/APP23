@@ -46,7 +46,7 @@ source("../plotColorsHuman.R")
 #source("../plotColorsCKp25.R")
 
 ####################################################################
-#                      Differential Expression                     #
+#                        Filtering the data                        #
 ####################################################################
 # A dge list is creates, this list is used to estimate the GLM 
 # common, trended and tagwise dispersion. This object holds the 
@@ -75,6 +75,9 @@ M2 <- cpm(dge, log=TRUE)
 M3 <- M2
 rownames(M3) <- BioM[,3]
 
+####################################################################
+#                      Differential expression                     #
+####################################################################
 differentialExpression("Human", "/home/mdubbelaar/Desktop/Results/Human/")
 #differentialExpression("APP23", "/home/mdubbelaar/Desktop/Results/APP23/")
 #differentialExpression("CKp25", "/home/mdubbelaar/Desktop/Results/CKp25/")
