@@ -1,12 +1,16 @@
 ####################################################################
 # Author    : M. Dubbelaar
-# Date      : 10-sept-2015
-# File Name : loadingAppFile.R
-# Purpose   : Loads the data from the APP23 research and the information of the samples.
+# Date      : 8-dec-2015
+# File Name : EdgeRFunctions.R
+# Purpose   : This file contains all of the functions that are used
+#             in the EgdeRmain file.
 ####################################################################
 #                     Get all of the probe names                   #
 ####################################################################
 setRowname <- function(data) {
+  # This function checks for the column with the name "probe"
+  # This column will be used as the rownames and the column will be
+  # put to null (it will remove the colum).
   colNumber <- grep("probe", colnames(data))
   row.names(data) <- data[, colNumber]
   data[,colNumber] <- NULL
@@ -16,7 +20,9 @@ setRowname <- function(data) {
 #             Load the unique information about data               #
 ####################################################################
 getData <- function(pathwayData, seperator) {
-#  The rawData contains the probe names and all of the measurement for each sample in the study
+# The rawData contains the probe names and all of the measurement 
+# for each sample in the study. The pathway and the seperator for the
+# data file is given. The data in this file will be saved as rawData.
   rawData <- read.delim(pathwayData, sep=seperator)
   rawData <- rawData[order(colnames(rawData), decreasing = F )]
   rawData <- setRowname(rawData)
@@ -25,7 +31,9 @@ getData <- function(pathwayData, seperator) {
 
 getTarget <- function(pathwatTargets) {
   # The information of the rawData is stored within a different file.
-  # This file contains information like: the sample_nr, the condition, the number of the plate and so on.
+  # This file contains information like: the sample_nr, the condition,
+  # the number of the plate and so on. The information of this file
+  # is saved as targets.
   targets <- read.table(pathwatTargets, sep = ",", header = T)
   targets <- targets[order(targets$Sample),]
   return(targets)
@@ -34,41 +42,13 @@ getTarget <- function(pathwatTargets) {
 ####################################################################
 #                         Filter functions                         #
 ####################################################################
-filterData <- function() {
-  ####################################################################
-  #                      Differential Expression                     #
-  ####################################################################
-  # A dge list is creates, this list is used to estimate the GLM 
-  # common, trended and tagwise dispersion. This object holds the 
-  # dataset that needs to be analysed by EgdeR and the calculations 
-  # which where performed on the dataset
-  dge <- DGEList(counts=rawData, group=factor(targets$Conditie) )
-  ####################################################################
-  #                      Loading Ensembl data                        #
-  ####################################################################
-  source("/home/mdubbelaar/APP23/CreatedData/loadingEnsemblData.R")
-  ####################################################################
-  #                       Estimation Dispersions                     #
-  ####################################################################
-  # The data is filtered with a cut-off of 1 count per million (cpm).
-  # The data with 2 replicated samples will be saves into the vector.
-  isExpr <- rowSums(cpm(dge)>1) >= 2
-  # These expressed genes will be saved within the dge and BioM dataset.
-  dge <- dge[isExpr, ]
-  BioM <- BioM[isExpr,]
-  
-  # The raw library sizes are calculated with the use of calNormFactors
-  # This is a step before calculating the estimates.
-  dge <- calcNormFactors(dge)
-  colnames(dge$counts) <- targets$Samples
-  M2 <- cpm(dge, log=TRUE)
-  M3 <- M2
-  rownames(M3) <- BioM[,3]
-}
-
 filterGenes <- function(tabel, fdr, logfc) {
-  # This function is made to calculate the unique genes for the differential expressions.
-  # The genes with a FDR below a number of 0.05 are returned.
+  # This function is made to calculate the unique genes for the 
+  # differential expressions. The genes with a FDR below a number of 
+  #0.05 are returned. To adjust the amount of returned genes, an 
+  # adjusted FDR and logFC can be given. 
+  # The if-else statements makes sure that the fdr and the logfc
+  # values are optional.
   if (missing(fdr) & missing(logfc)) {
     uniqueGenes <- which(tabel[[1]]$FDR < 0.05)
   } else if (missing(logfc)) {
@@ -85,6 +65,9 @@ filterGenes <- function(tabel, fdr, logfc) {
 }
 
 filterResult <- function(tabel, bioMList, calculation) {
+# The function filterResults gets the genes and their 
+# information according to the given calculation
+# The BioM list is adjusted immediately as well.
   uniqueGenes <- calculation
   uniqueGenesList <- data.frame(tabel[uniqueGenes,])
   BioM.uniqueGenes <- bioMList[uniqueGenes, ]
@@ -97,12 +80,18 @@ filterResult <- function(tabel, bioMList, calculation) {
 ####################################################################
 
 mdsPlot <- function(pathway){
+# The mdsPlot functions makes sure that a MDS plot is made
+# The labels show the condition of the samples.
   pdf(pathway) 
   plotMDS.DGEList(dge, col=col_cell_age, main="MDS plot", labels = targets$Conditie)
   dev.off() 
 }
 
 plotMostExpr <- function(results, calc1, calc2, amount, path) {
+# The function plotMostExpr makes sure that a heatmap is made
+# of the genes that are returned by the function filterResult.
+# There are two heatmaps in stead of two, these two conditions
+# are found the most informative.
   results1 <- filterResult(results[[2]], results[[5]], calc1)
   results2 <- filterResult(results[[3]], results[[6]], calc2)
   pdf(path)
@@ -130,8 +119,9 @@ pcaPlot <- function(pathway) {
   # rgl.postscript writes the current figure into a pdf (so you can rotate the plot before saving). 
   rgl.postscript(paste(pathway, "Plots/PCA.pdf", sep=""), "pdf")
 }
+
 ####################################################################
-#                    Other (bigger functions                       #
+#                    Other (bigger functions)                      #
 ####################################################################
 createToptableResults <- function(lrt, pathway, fdr, pval){
   if (missing(pathway)) {
@@ -161,6 +151,11 @@ createToptableResults <- function(lrt, pathway, fdr, pval){
 } 
 
 saveInfoDE <- function(name, result, fileName1, fileName2, fileName3) {
+# The Differential expression genes are saved into the vector, the 
+# second step is to create a list with information that can be used
+# in the columns for the differential expression data. The data of 
+# the DE data set and the list of names will be used to create a 
+# text file with all of the information.
   DE.ExpressionOM_mainGenotype <- cbind(rownames(result[[1]][[1]]), result[[1]][[1]]$logFC, result[[1]][[1]]$FDR, result[[4]][,3:4])
   DE.ExpressionOM_mainAge <- cbind(rownames(result[[2]][[1]]), result[[2]][[1]]$logFC, result[[2]][[1]]$FDR, result[[5]][,3:4])
   DE.ExpressionOM_Linear <- cbind(rownames(result[[3]][[1]]), result[[3]][[1]]$logFC, result[[3]][[1]]$FDR, result[[6]][,3:4])
@@ -196,15 +191,15 @@ calculateMaineffectsInteraction <- function(dge, design, pathwayDoc, pathwayPlot
   Toptable1 <- topTags(lrt1, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
   Toptable2 <- topTags(lrt2, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
   Toptable3 <- topTags(lrt3, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-  
+  # The differential expressed genes between the two genotypes
   Toptable1.results <- filterGenes(Toptable1)
   geneInfo1 <- Toptable1.results[[2]]
   Toptable1.results <- Toptable1.results[[1]]
-  
+  # The differential expressed genes over time
   Toptable2.results <- filterGenes(Toptable2)
   geneInfo2 <- Toptable2.results[[2]]
   Toptable2.results <- Toptable2.results[[1]]
-  
+  # The differential expressed genes in the interaction effect genotype*time
   Toptable3.results <- filterGenes(Toptable3)
   geneInfo3 <- Toptable3.results[[2]]
   Toptable3.results <- Toptable3.results[[1]]
