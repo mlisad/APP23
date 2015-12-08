@@ -1,8 +1,9 @@
 ####################################################################
 # Author    : M. Dubbelaar
-# Date      : 14-sept-2015
-# File Name : edgeRDespersions.R
-# Purpose   : Calculates the dispersions of each comparison
+# Date      : 05-dec-2015
+# File Name : edgeRDespersionsHuman.R
+# Purpose   : Calculates the differential expression genes among
+#             the LOAD and the CTRL patients.
 ####################################################################
 # The design is used with the calculation of the estimates. 
 design <- model.matrix(~0+factor(targets$Genotype), data = dge$samples)
