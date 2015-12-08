@@ -1,10 +1,10 @@
 ####################################################################
 # Author    : M. Dubbelaar
-# Date      : 23-sept-2015
+# Date      : 03-dec-2015
 # File Name : EdgeRLinearTimeCKp25.R
-# Purpose   : Calculates with the use of multiple designs the linear
+# Purpose   : Calculates with the use of a linear design the 
 #             genotype agains age, the main effect of age and the 
-#             main effect of genotype
+#             main effect of genotype.
 ####################################################################
 #               Results with a design Genotype * Time              #
 ####################################################################
