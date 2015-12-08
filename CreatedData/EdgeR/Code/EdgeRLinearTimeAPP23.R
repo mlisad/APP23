@@ -2,7 +2,7 @@
 # Author    : M. Dubbelaar
 # Date      : 03-dec-2015
 # File Name : EdgeRLinearTimeAPP23.R
-# Purpose   : Calculates with the use of a linear designs the 
+# Purpose   : Calculates with the use of a linear design the 
 #             genotype agains age, the main effect of age and the 
 #             main effect of genotype.
 ####################################################################
