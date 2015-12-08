@@ -10,8 +10,6 @@ dge <- estimateGLMCommonDisp(dge, design)
 dge <- estimateGLMTrendedDisp(dge, design)
 dge <- estimateGLMTagwiseDisp(dge, design)
 
-
-
 # A fit is made to read the counts for each transcript or gene.
 fit <- glmFit(dge, design)
 
@@ -37,9 +35,8 @@ toptable4 <- createToptableResults(lrt04, "/home/mdubbelaar/Desktop/Results/CKp2
 toptable5 <- createToptableResults(lrt05, "/home/mdubbelaar/Desktop/Results/CKp25/Made_Documents/DE/")
 toptable6 <- createToptableResults(lrt06, "/home/mdubbelaar/Desktop/Results/CKp25/Made_Documents/DE/")
 ####################################################################
-#                      Differential Expression                     #
+#                         Creating DE Files                        #
 ####################################################################
-
 DE.Expression <- cbind(rownames(toptable1[[1]][[1]]), toptable1[[1]][[1]]$logFC, toptable1[[1]][[1]]$FDR, toptable2[[1]][[1]]$logFC, toptable2[[1]][[1]]$FDR,
                          toptable3[[1]][[1]]$logFC, toptable3[[1]][[1]]$FDR, toptable4[[1]][[1]]$logFC, toptable4[[1]][[1]]$FDR,
                          toptable5[[1]][[1]]$logFC, toptable5[[1]][[1]]$FDR, toptable6[[1]][[1]]$logFC, toptable6[[1]][[1]]$FDR, BioM[,3:4])
