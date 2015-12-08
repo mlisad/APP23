@@ -20,7 +20,7 @@ lrt01 <- glmLRT(fit, contrast = c(-1,1))
 ####################################################################
 toptable1 <- createToptableResults(lrt01, "/home/mdubbelaar/Desktop/Results/Human/Made_Documents/DE/")
 ####################################################################
-#                      Differential Expression                     #
+#                         Creating DE Files                        #
 ####################################################################
 DE.Expression <- cbind(rownames(toptable1[[1]][[1]]), toptable1[[1]][[1]]$logFC, toptable1[[1]][[1]]$FDR, BioM[,3:4])
 geneColsHuman <- c("Genes",  "logFC: LOAD vs CTRL", "FDR: LOAD vs CTRL", "Gene Symbol", "Gene Description")
