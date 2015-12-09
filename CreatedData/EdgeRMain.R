@@ -33,15 +33,15 @@ library(data.table)
 ####################################################################
 source("Code/EdgeRFunctions.R")
 ####################################################################
-rawData <- getData("/media/mdubbelaar/BD_4T/APP23/HTSeq/Human/mergedCounts.txt", ",")
+rawData <- getData("/media/mdubbelaar/BD_4T/APP23/HTSeq/Human/mergedCounts.txt")
 targets <- getTarget("/media/mdubbelaar/BD_4T/APP23/HTSeq/Human/TargetHuman.csv")
 source("../plotColorsHuman.R")
 ####################################################################
-#rawData <- getData("/media/mdubbelaar/6CEC0BDEEC0BA186/1507_Holtman_RNAseq/run01/results/expression/expressionTable/expression_table02.genelevel.GRCm38.v76.htseq.txt.table", "\t")
+#rawData <- getData("/media/mdubbelaar/6CEC0BDEEC0BA186/1507_Holtman_RNAseq/run01/results/expression/expressionTable/expression_table02.genelevel.GRCm38.v76.htseq.txt.table")
 #targets <- getTarget("/home/mdubbelaar/APP23/Targets.csv")
 #source("../plotColorsAPP23.R")
 ####################################################################
-#rawData <- getData("/media/mdubbelaar/BD_4T/APP23/HTSeq/Mouse/mergedCounts.txt", ",")
+#rawData <- getData("/media/mdubbelaar/BD_4T/APP23/HTSeq/Mouse/mergedCounts.txt")
 #targets <- getTarget("/media/mdubbelaar/BD_4T/APP23/HTSeq/Mouse/TargetMouse.csv")
 #source("../plotColorsCKp25.R")
 

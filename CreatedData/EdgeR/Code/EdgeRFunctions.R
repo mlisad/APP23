@@ -19,11 +19,11 @@ setRowname <- function(data) {
 ####################################################################
 #             Load the unique information about data               #
 ####################################################################
-getData <- function(pathwayData, seperator) {
+getData <- function(pathwayData) {
 # The rawData contains the probe names and all of the measurement 
 # for each sample in the study. The pathway and the seperator for the
 # data file is given. The data in this file will be saved as rawData.
-  rawData <- read.delim(pathwayData, sep=seperator)
+  rawData <- read.delim(pathwayData, sep="\t")
   rawData <- rawData[order(colnames(rawData), decreasing = F )]
   rawData <- setRowname(rawData)
   return(rawData)
