@@ -17,9 +17,10 @@ source("Code/LFCseqR_helper.R")
 library("RColorBrewer")
 library("gplots")
 ####################################################################
-source("../loadingAppFile.R")
-M1 <- APP23_data[,2:25]
-rownames(M1) <- APP23_data[,1]
+source("../EdgeR/Code/EdgeRFunctions.R")
+M1 <- getData("/Users//mldubbelaar/Downloads/expression_table02.genelevel.GRCm38.v76.htseq.txt.table")
+targets <- getTarget("/Users//mldubbelaar/APP23/Targets.csv")
+source("../plotColors.R")
 ####################################################################
 #                       Using the main function                    #
 ####################################################################
@@ -44,7 +45,6 @@ saveFoundData <- function(data, samples, norm, mapName) {
   dev.off()
   write.table(rownames(unique), file = paste("/home/mdubbelaar/Desktop/APP23_results/LfcSeq/Made_Documents/", mapName, norm, "Genes.txt", sep=""), row.names = F, col.names=F, sep=", ", quote = F)
 }
-
 
 normData <- LFCseq(M1, condsAB = targets$Conditie, norm.method = "rpm")
 dataMat <- data.frame(row.names = rownames(M1), normData)
