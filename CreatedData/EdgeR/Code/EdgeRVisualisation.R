@@ -46,12 +46,17 @@ dge <- DGEList(counts=M1, group=factor(targets$Conditie) )
 ####################################################################
 source("../loadingEnsemblData.R")
 ####################################################################
-#                      Data Check (APP23 only)                     #
+#                          APP Data Check                          #
 ####################################################################
+# The CPMatrix contains the cpm values obtained from the dge vector.
 CPMmatrix <- as.matrix(cpm(dge, log = T))
 rownames(CPMmatrix) <- BioM[,3]
 
+# The App gene is filtered from the CPMatrix. This is the gene that
+# should show a difference when looking at the WT and HET mice.
 appGene <- which(rownames(CPMmatrix)=="App")
+# The values of this genes are obtained from the CPMatrix and saved
+# as a plot that shows the expression of the App gene.
 appExpression <- CPMmatrix[appGene,]
 pdf("/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/AppCheck.pdf")
 plot(appExpression, col=col_cell_age, pch=20, cex=3, ylab = "Expression of App")
@@ -71,6 +76,9 @@ BioM <- BioM[isExpr,]
 dge <- calcNormFactors(dge)
 colnames(dge$counts) <- targets$Samples
 M2 <- cpm(dge, log=TRUE)
+# The M3 dataset is made so it can be used in the creation of the heatmaps
+# Without interfering with the M2 dataset. The M3 dataset contains
+# genenames instead of the Ensemble id's.
 M3 <- M2
 rownames(M3) <- BioM[,3]
 ####################################################################

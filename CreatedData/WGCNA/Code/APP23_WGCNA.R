@@ -218,7 +218,7 @@ dev.off()
 # The AppAndAB plot shows the different expressions of the APP gene
 # expression and the AB, AB40 and AB42 ELISA values.
 pdf("/home/mdubbelaar/Desktop/WGCNA/AppAndAB.pdf")
-source("CreatedData/plotColors.R")
+source("..//plotColors.R")
 par(mfrow=c(4,1), mar=c(1,2,1,0))
 plot(appExpression, col=col_cell_age, pch=20, cex=3, main="APP")
 plot(targets$Amyloid..g.wet.weight, col=col_cell_age, pch=20, cex=3, main="AB")
