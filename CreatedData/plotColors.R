@@ -5,7 +5,6 @@
 # Purpose   : Creating a color palette which can be used in multiple
 #             files.
 ####################################################################
-
 # A repetition will be made for each available target.
 col_cell_age <- rep("black", dim(targets)[1])
 # A contrast needs to be made for 2 different genotypes (APP and WT)

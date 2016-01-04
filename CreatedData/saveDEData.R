@@ -5,8 +5,6 @@
 # Purpose   : Creates a txt file with the amount of unique genes 
 #             for the DE.
 ####################################################################
-setwd("/Volumes/Elements_Marissa/School//Stage//APP23//Results//APP23_results//EdgeR/")
-
 # The data of the effects found with the the linear time design
 # need to be read from the saved files. These files are the younger
 # mice, the older mice and mice of all ages.
@@ -80,5 +78,3 @@ rownames(unique.Genes) <-c("2M_WT-2M_HET", "6M_WT-6M_HET", "18M_WT-18M_HET", "24
 ####################################################################
 # The data is written to a csv file, this can be used for further research.
 write.table(unique.Genes, "Made_Documents/Amount_Differential_Expression.csv", col.names=F, sep=":")
-
-setwd("/Users//mldubbelaar/APP23/CreatedData/EdgeR/")

@@ -3,7 +3,7 @@
 # Date      : 05-okt-2015
 # File Name : NOIseqVisualisation.R
 # Purpose   : To visualise the APP data with the package NOIseq.
-# Used Files: loadingAppFile.R
+# Used Files: EdgeRFunctions.R
 #             loadingEnsemblDataNew.R
 ####################################################################
 #              Installing all of the necessary packages            #
@@ -18,9 +18,8 @@ library("biomaRt")
 #               Reading of the data and the targets                #
 ####################################################################
 source("../EdgeR/Code/EdgeRFunctions.R")
-M1 <- getData("/Users//mldubbelaar/Downloads/expression_table02.genelevel.GRCm38.v76.htseq.txt.table")
-targets <- getTarget("/Users//mldubbelaar/APP23/Targets.csv")
-source("../plotColors.R")
+M1 <- getData("/media/mdubbelaar/6CEC0BDEEC0BA186/1507_Holtman_RNAseq/run01/results/expression/expressionTable/expression_table02.genelevel.GRCm38.v76.htseq.txt.table")
+targets <- getTarget("/home/mdubbelaar/APP23/Targets.csv")
 ####################################################################
 #                      Loading Ensembl data                        #
 ####################################################################

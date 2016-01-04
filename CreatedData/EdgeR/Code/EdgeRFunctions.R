@@ -3,7 +3,7 @@
 # Date      : 8-dec-2015
 # File Name : EdgeRFunctions.R
 # Purpose   : This file contains all of the functions that are used
-#             in the EgdeRmain file.
+#             in the EdgeRVisualisation file.
 ####################################################################
 #                     Get all of the probe names                   #
 ####################################################################
@@ -78,7 +78,6 @@ filterResult <- function(tabel, bioMList, calculation) {
 ####################################################################
 #                          Plot function                           #
 ####################################################################
-
 mdsPlot <- function(pathway){
 # The mdsPlot functions makes sure that a MDS plot is made
 # The labels show the condition of the samples.
@@ -120,12 +119,101 @@ pcaPlot <- function(pathway) {
   rgl.postscript(paste(pathway, "Plots/PCA.pdf", sep=""), "pdf")
 }
 
+makeVulcanoPlot <- function(table, result, name) {
+  # Creates the vulano plot with the use of the results gained
+  # from the function calFDRandLogFC.
+  plot(as.data.frame(table[[1]][,1])[[1]], -log(as.data.frame(changeFDR(table[[1]][,5]))[[1]], 10), main=name, pch=20, xlab="log2FC)", ylab="-log10 (FDR p-value)")
+  points(as.data.frame(result[[1]][,1])[[1]], -log(as.data.frame(changeFDR(result[[1]][,5]))[[1]], 10), cex = 1, col= "darkred", pch= 20)
+  points(as.data.frame(result[[2]][,1])[[1]], -log(as.data.frame(changeFDR(result[[2]][,5]))[[1]], 10), cex = 1, col= "red", pch= 20)
+  text(as.data.frame(result[[3]][,1])[[1]], -log(as.data.frame(changeFDR(result[[3]][,5]))[[1]], 10), result[[4]], cex = 0.75, col= "black")
+}
 ####################################################################
-#                    Other (bigger functions)                      #
+#                        Calculate functions                       #
 ####################################################################
+calFDRandLogFC <- function (tablename, pval1, pval2, pval3, logfc, logfc2) {
+  # Three different toptables are made to create the vulcano plot.
+  # This depends on the values given when calling this function.
+  # The first value shows the values below a certain pval. The two
+  # other tables need a pval and a logfc to make sure that the found genes 
+  # are more significant then the one above.
+  Toptable1 <- tablename[abs(as.data.frame(tablename[,5])) < pval1,] 
+  Toptable2 <- tablename[abs(as.data.frame(tablename[,5])) < pval2 & abs(as.data.frame(tablename[,1])) > logfc,]
+  Toptable3 <- tablename[abs(as.data.frame(tablename[,5])) < pval3 & abs(as.data.frame(tablename[,1])) > logfc2,]
+  Genes1 <- BioM[abs(as.data.frame(tablename[,5])) < pval3 &  abs(as.data.frame(tablename[,1])) > logfc2, 3]
+  results <- list(Toptable1, Toptable2, Toptable3, Genes1)
+  return (results)
+}
+
+calculateMaineffectsInteraction <- function(dge, design, pathwayDoc, pathwayPlot, length) {
+  # This function makes sure that the main effect of the ages, the main effect of the genotype and the interaction model
+  # of each dataset is calculated.
+  # The dge and the design are necessary items to calculate the these effects.
+  # glmFit conducts statistical tests to fit the negative binomial generalized linear model.
+  # The function glmLRT, tests the likelihood of the coefficients.
+  # topTags orders the data by the ranking of the p value ord the logFC.
+  # The lasts steps contains the filtering of the genes with a FDR < 0.05, the visualisation of these genes and 
+  # saving these unique gene names into a file.
+  fit <- glmFit(dge, design)
+  # With the use of different coefs, different genewise statistical tests are made.
+  # The first one compares the WT against APP (main effect of genotype)
+  lrt1 <- glmLRT(fit, coef=2)
+  # The second comparison checks the main effect of age
+  lrt2 <- glmLRT(fit, coef=3)
+  # The third and last comparison checks the linear interaction.
+  lrt3 <- glmLRT(fit, coef=4)
+  
+  # The 3 different statistical tests are extracted in a dataframe
+  # These results will be checked within the own-made function filtergenes to check if they meet the requirements.
+  Toptable1 <- topTags(lrt1, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
+  Toptable2 <- topTags(lrt2, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
+  Toptable3 <- topTags(lrt3, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
+  # The differential expressed genes between the two genotypes
+  Toptable1.results <- filterGenes(Toptable1)
+  geneInfo1 <- Toptable1.results[[2]]
+  Toptable1.results <- Toptable1.results[[1]]
+  # The differential expressed genes over time
+  Toptable2.results <- filterGenes(Toptable2)
+  geneInfo2 <- Toptable2.results[[2]]
+  Toptable2.results <- Toptable2.results[[1]]
+  # The differential expressed genes in the interaction effect genotype*time
+  Toptable3.results <- filterGenes(Toptable3)
+  geneInfo3 <- Toptable3.results[[2]]
+  Toptable3.results <- Toptable3.results[[1]]
+  
+  # The last step is to plot the genes with their information in a heatmap.
+  pdf(pathwayPlot) 
+  heatmap.2(M2[match(rownames(Toptable1.results), rownames(M2)), length], ColSideColors= col_cell_age[length], cexRow = 0.01, trace = "none", scale = "row", main="Main effect genotype")
+  heatmap.2(M2[match(rownames(Toptable2.results), rownames(M2)), length], ColSideColors = col_cell_age[length], cexRow = 0.01, trace = "none", scale = "row", main="Main effect age")
+  heatmap.2(M2[match(rownames(Toptable3.results), rownames(M2)), length], ColSideColors = col_cell_age[length], cexRow = 0.01, trace = "none", scale = "row", main="Interaction effect")
+  dev.off()
+  # The unique genes are saved within a table so these gene names can be used for futher analysis. 
+  write.table(rownames(Toptable1.results), paste(pathwayDoc, "main_genotype_result.txt", sep = ""), row.names = F, col.names=F, eol=",\n", quote = F)
+  write.table(rownames(Toptable2.results), paste(pathwayDoc, "main_age_result.txt", sep = ""), row.names = F, col.names=F, eol=",\n", quote = F)
+  write.table(rownames(Toptable3.results), paste(pathwayDoc, "interaction_result.txt", sep = ""), row.names = F, col.names=F, eol=",\n", quote = F)
+  # Creation of a DE file of the main and the interaction effects.
+  DE_Expression <- cbind(rownames(Toptable1[[1]]), Toptable1[[1]]$logFC, Toptable1[[1]]$FDR, Toptable2[[1]]$logFC, Toptable2[[1]]$FDR, Toptable3[[1]]$logFC, Toptable3[[1]]$FDR, BioM[,3:4])
+  write.table(DE_Expression , paste(pathwayDoc, "LinearTimeDE.txt", sep=""), row.names = F,  col.names = c("Genes", "Main-effect Genotype (logFC)", 
+                                                                                                           "Main-effect Genotype (FDR)", "Main-effect Age (logFC)", "Main-effect Age (FDR)", "Linear Effect (logFC)", 
+                                                                                                           "Linear Effect (FDR)", "Gene Symbol", "Gene Description"), sep = "\t")
+  data <- list(Toptable1.results, Toptable2.results, Toptable3.results, geneInfo1,geneInfo2, geneInfo3)
+}
+
+####################################################################
+#                          Other functions                         #
+####################################################################
+changeFDR <- function(table) {
+  # If the pvalue is below the 1E-70, the value will be adjucted 
+  # to a value of 1E-70, to make sure that the image looks more clear.
+  pval <- table[[1]][1]
+  pval[pval < 1E-70,] <- 1E-70 
+  return (pval)
+}
+
 createToptableResults <- function(lrt, pathway, fdr, pval){
+  # Is there is no pathway given when calling this function, 
+  # a pathway is used that is defined in the function itself.
   if (missing(pathway)) {
-    pathway = "/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Made_Documents/DE/"
+    pathway = paste(resultPathway, "Made_Documents/DE/", sep="")
   }
   # Data is stored within the toptables for further anaylsis.
   toptable <- topTags(lrt, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
@@ -162,66 +250,7 @@ saveInfoDE <- function(result, fileName1, fileName2, fileName3) {
   geneColsOM_mainGenotype <- c("Genes", "logFC: Main-effect Genotype","FDR: Main-effect Genotype", "Gene Symbol", "Gene Description")
   geneColsOM_mainAge <- c("Genes", "logFC: Main-effect Age","FDR: Main-effect Age", "Gene Symbol", "Gene Description")
   geneColsOM_mainLinear <- c("Genes", "logFC: Linear Effect Age:Genotype",  "FDR:  Linear Effect Age:Genotype", "Gene Symbol", "Gene Description")
-  #write.table(DE.ExpressionOM_mainGenotype, paste("/home/mdubbelaar/Desktop/Results/", name,"/Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainGenotype, sep = "\t")
-  #write.table(DE.ExpressionOM_mainAge, paste("/home/mdubbelaar/Desktop/Results/", name,"/Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
-  #write.table(DE.ExpressionOM_Linear, paste("/home/mdubbelaar/Desktop/Results/", name,"/Made_Documents/DE_Files/", fileName3, sep = ""), row.names = F, col.names = geneColsOM_mainLinear, sep = "\t")
-  write.table(DE.ExpressionOM_mainGenotype, paste("/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainGenotype, sep = "\t")
-  write.table(DE.ExpressionOM_mainAge, paste("/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
-  write.table(DE.ExpressionOM_Linear, paste("/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Made_Documents/DE_Files/", fileName3, sep = ""), row.names = F, col.names = geneColsOM_mainLinear, sep = "\t")
-}
-
-calculateMaineffectsInteraction <- function(dge, design, pathwayDoc, pathwayPlot, length) {
-  # This function makes sure that the main effect of the ages, the main effect of the genotype and the interaction model
-  # of each dataset is calculated.
-  # The dge and the design are necessary items to calculate the these effects.
-  # glmFit conducts statistical tests to fit the negative binomial generalized linear model.
-  # The function glmLRT, tests the likelihood of the coefficients.
-  # topTags orders the data by the ranking of the p value ord the logFC.
-  # The lasts steps contains the filtering of the genes with a FDR < 0.05, the visualisation of these genes and 
-  # saving these unique gene names into a file.
-  
-  fit <- glmFit(dge, design)
-  # With the use of different coefs, different genewise statistical tests are made.
-  # The first one compares the WT against APP (main effect of genotype)
-  lrt1 <- glmLRT(fit, coef=2)
-  # The second comparison checks the main effect of age
-  lrt2 <- glmLRT(fit, coef=3)
-  # The third and last comparison checks the linear interaction.
-  lrt3 <- glmLRT(fit, coef=4)
-  
-  # The 3 different statistical tests are extracted in a dataframe
-  # These results will be checked within the own-made function filtergenes to check if they meet the requirements.
-  Toptable1 <- topTags(lrt1, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-  Toptable2 <- topTags(lrt2, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-  Toptable3 <- topTags(lrt3, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
-  # The differential expressed genes between the two genotypes
-  Toptable1.results <- filterGenes(Toptable1)
-  geneInfo1 <- Toptable1.results[[2]]
-  Toptable1.results <- Toptable1.results[[1]]
-  # The differential expressed genes over time
-  Toptable2.results <- filterGenes(Toptable2)
-  geneInfo2 <- Toptable2.results[[2]]
-  Toptable2.results <- Toptable2.results[[1]]
-  # The differential expressed genes in the interaction effect genotype*time
-  Toptable3.results <- filterGenes(Toptable3)
-  geneInfo3 <- Toptable3.results[[2]]
-  Toptable3.results <- Toptable3.results[[1]]
-  
-  # The last step is to plot the genes with their information in a heatmap.
-  pdf(pathwayPlot) 
-  heatmap.2(M2[match(rownames(Toptable1.results), rownames(M2)), length], ColSideColors= col_cell_age[length], cexRow = 0.01, trace = "none", scale = "row", main="Main effect genotype")
-  heatmap.2(M2[match(rownames(Toptable2.results), rownames(M2)), length], ColSideColors = col_cell_age[length], cexRow = 0.01, trace = "none", scale = "row", main="Main effect age")
-  heatmap.2(M2[match(rownames(Toptable3.results), rownames(M2)), length], ColSideColors = col_cell_age[length], cexRow = 0.01, trace = "none", scale = "row", main="Interaction effect")
-  dev.off()
-  
-  # The unique genes are saved within a table so these gene names can be used for futher analysis. 
-  write.table(rownames(Toptable1.results), paste(pathwayDoc, "main_genotype_result.txt", sep = ""), row.names = F, col.names=F, eol=",\n", quote = F)
-  write.table(rownames(Toptable2.results), paste(pathwayDoc, "main_age_result.txt", sep = ""), row.names = F, col.names=F, eol=",\n", quote = F)
-  write.table(rownames(Toptable3.results), paste(pathwayDoc, "interaction_result.txt", sep = ""), row.names = F, col.names=F, eol=",\n", quote = F)
-  
-  DE_Expression <- cbind(rownames(Toptable1[[1]]), Toptable1[[1]]$logFC, Toptable1[[1]]$FDR, Toptable2[[1]]$logFC, Toptable2[[1]]$FDR, Toptable3[[1]]$logFC, Toptable3[[1]]$FDR, BioM[,3:4])
-  write.table(DE_Expression , paste(pathwayDoc, "LinearTimeDE.txt", sep=""), row.names = F,  col.names = c("Genes", "Main-effect Genotype (logFC)", 
-                                                                                                           "Main-effect Genotype (FDR)", "Main-effect Age (logFC)", "Main-effect Age (FDR)", "Linear Effect (logFC)", 
-                                                                                                           "Linear Effect (FDR)", "Gene Symbol", "Gene Description"), sep = "\t")
-  data <- list(Toptable1.results, Toptable2.results, Toptable3.results, geneInfo1,geneInfo2, geneInfo3)
+  write.table(DE.ExpressionOM_mainGenotype, paste(resultPathway, "Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainGenotype, sep = "\t")
+  write.table(DE.ExpressionOM_mainAge, paste(resultPathway, "Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
+  write.table(DE.ExpressionOM_Linear, paste(resultPathway, "Made_Documents/DE_Files/", fileName3, sep = ""), row.names = F, col.names = geneColsOM_mainLinear, sep = "\t")
 }

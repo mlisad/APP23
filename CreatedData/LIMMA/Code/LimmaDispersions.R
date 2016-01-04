@@ -26,7 +26,7 @@ cont.matrix <- cbind("2M.WTvs2M.HET"=c(1,0,0,0,-1,0,0,0),
                      "24M.WTvs18M.WT"=c(0,0,0,0,0,0,1,-1),
                      "24M.HETvs2M.HET"=c(1,0,0,-1,0,0,0,0),
                      "24M.WTvs2M.WT"=c(0,0,0,0,1,0,0,-1))
-########################################################################################################################################
+####################################################################
 # The fit is made with the use of the eBayes function (note not ebayes this causes errors).
 fit2 <- eBayes(contrasts.fit(fit, cont.matrix))
 # Data is stored within the tables for further anaylsis.
@@ -44,7 +44,7 @@ limma.table9 <- topTable(fit2, coef = "18M.WTvs6M.WT", n=Inf, sort.by="none")
 limma.table10 <- topTable(fit2, coef = "24M.WTvs18M.WT", n=Inf, sort.by="none")
 limma.table11 <- topTable(fit2, coef = "24M.HETvs2M.HET", n=Inf, sort.by="none")
 limma.table12 <- topTable(fit2, coef = "24M.WTvs2M.WT", n=Inf, sort.by="none")
-########################################################################################################################################
+####################################################################
 # The results from the toptables are checked with the use of the own-made filtergenes function
 # This function returns the data which contain a p-value below the 0.05
 toptable1.results <- filterGenesWithLimma(limma.table1)

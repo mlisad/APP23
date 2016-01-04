@@ -1,8 +1,10 @@
 ####################################################################
 # Author    : M. Dubbelaar
 # Date      : 14-sept-2015
-# File Name : edgeRDespersions.R
+# File Name : EdgeRDespersions.R
 # Purpose   : Calculates the dispersions of each comparison
+####################################################################
+#             Creating the design and the comparisons              #
 ####################################################################
 # The design is used with the calculation of the estimates. 
 design <- model.matrix(~0+factor(targets$Conditie), data = dge$samples)
@@ -73,8 +75,7 @@ toptable12.results <- toptable12[[2]]
 ####################################################################
 # Checks the two toptable results with the most unique genes.
 # These heatmaps are saved within the heatmap.pdf.
-#pdf("/home/mdubbelaar/Desktop/Results/APP23/Plots/heatmaps_containing_most_genes.pdf") 
-pdf("/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Plots/heatmaps_containing_most_genes.pdf") 
+pdf(paste(resultPathway, "Plots/heatmaps_containing_most_genes.pdf", sep="")) 
 heatmap.2(M2[match(rownames(toptable11.results), rownames(M2)),c(4:6, 10:12, 16:18, 22:24)], ColSideColors = col_cell_age[c(4:6, 10:12, 16:18, 22:24)], cexRow = 0.01, trace = "none", scale = "row", main="24M HET - 2M HET")
 heatmap.2(M2[match(rownames(toptable12.results), rownames(M2)),c(1:3, 7:9, 13:15, 19:21)], ColSideColors = col_cell_age[c(1:3, 7:9, 13:15, 19:21)], cexRow = 0.01, trace = "none", scale = "row", main="24M WT - 2M WT")
 dev.off()
@@ -99,10 +100,6 @@ geneColsHET <- c("Genes", "logFC: 6M HET vs 2M HET", "FDR: 6M HET vs 2M HET", "l
                  "logFC: 24M HET vs 18M HET", "FDR: 24M HET vs 18M HET", "logFC: 24M HET vs 2M HET", "FDR: 24M HET vs 2M HET", "Gene Symbol", "Gene Description")
 geneColsCombi <- c("Genes", "logFC: 2M WT vs 2M HET","FDR: 2M WT vs 2M HET", "logFC: 6M WT vs 6M HET",  "FDR: 6M WT vs 6M HET", 
                    "logFC: 18M WT vs 18M HET", "FDR: 18M WT vs 18M HET", "logFC: 24M WT vs 24M HET", "FDR: 24M WT vs 24M HET", "Gene Symbol", "Gene Description")
-#write.table(DE.ExpressionWT , "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesWT.txt", row.names = F, col.names = geneColsWT, sep = "\t")
-#write.table(DE.ExpressionHET , "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesHET.txt", row.names = F, col.names = geneColsHET, sep = "\t")
-#write.table(DE.ExpressionCombi , "/home/mdubbelaar/Desktop/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesHET-WT.txt", row.names = F, col.names = geneColsCombi, sep = "\t")
-write.table(DE.ExpressionWT , "/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesWT.txt", row.names = F, col.names = geneColsWT, sep = "\t")
-write.table(DE.ExpressionHET , "/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesHET.txt", row.names = F, col.names = geneColsHET, sep = "\t")
-write.table(DE.ExpressionCombi , "/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Made_Documents/DE_Files/DifferentialGenesHET-WT.txt", row.names = F, col.names = geneColsCombi, sep = "\t")
-
+write.table(DE.ExpressionWT , paste(resultPathway, "Made_Documents/DE_Files/DifferentialGenesWT.txt", sep=""), row.names = F, col.names = geneColsWT, sep = "\t")
+write.table(DE.ExpressionHET , paste(resultPathway, "Made_Documents/DE_Files/DifferentialGenesHET.txt", sep=""), row.names = F, col.names = geneColsHET, sep = "\t")
+write.table(DE.ExpressionCombi , paste(resultPathway, "Made_Documents/DE_Files/DifferentialGenesHET-WT.txt", sep=""), row.names = F, col.names = geneColsCombi, sep = "\t")

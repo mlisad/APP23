@@ -4,19 +4,18 @@
 # File Name : EdgeRVisualisation.r
 # Purpose   : This script creates a visualisation of the data with 
 #             the use of the EdgeR package.
-# Used Files: loadingAppFile.R
-#             loadingEnsemblData.R
+# Used Files: EdgeRFunctions.R
 #             plotColors.R
+#             loadingEnsemblData.R
 #             EdgeRLinearTime.R
 #             EdgeRDispersions.R
-#             EdgeRPCA.R
+#             EdgeRScatterplots.R
 #             saveDEData.R
 ####################################################################
 #              Installing all of the necessary packages            #
 ####################################################################
 source("http://bioconductor.org/biocLite.R")
-#setwd("/home/mdubbelaar/APP23/CreatedData/EdgeR/")
-setwd("/Users//mldubbelaar/APP23/CreatedData/EdgeR/")
+setwd("/home/mdubbelaar/APP23/CreatedData/EdgeR/")
 #biocLite("limma")
 #biocLite("edgeR")
 #biocLite("biomaRt")
@@ -28,12 +27,13 @@ library(edgeR)
 library(biomaRt)
 library(gplots)
 library(rgl)
+resultPathway <- "/home/mdubbelaar/Desktop/APP23_results/EdgeR/"
 ####################################################################
 #               Reading of the data and the targets                #
 ####################################################################
 source("Code/EdgeRFunctions.R")
-M1 <- getData("/Users//mldubbelaar/Downloads/expression_table02.genelevel.GRCm38.v76.htseq.txt.table")
-targets <- getTarget("/Users//mldubbelaar/APP23/Targets.csv")
+M1 <- getData("/media/mdubbelaar/6CEC0BDEEC0BA186/1507_Holtman_RNAseq/run01/results/expression/expressionTable/expression_table02.genelevel.GRCm38.v76.htseq.txt.table")
+targets <- getTarget("/home/mdubbelaar/APP23/Targets.csv")
 source("../plotColors.R")
 
 # A dge list is creates, this list is used to estimate the GLM 
@@ -58,7 +58,8 @@ appGene <- which(rownames(CPMmatrix)=="App")
 # The values of this genes are obtained from the CPMatrix and saved
 # as a plot that shows the expression of the App gene.
 appExpression <- CPMmatrix[appGene,]
-pdf("/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/AppCheck.pdf")
+
+pdf(paste(resultPathway, "Plots/AppCheck.pdf", sep=""))
 plot(appExpression, col=col_cell_age, pch=20, cex=3, ylab = "Expression of App")
 dev.off()
 ####################################################################
@@ -86,7 +87,7 @@ rownames(M3) <- BioM[,3]
 ####################################################################
 # The MDS plot is made and saved within a file with the use of pdf()
 # dev.off() is necessary to close the connection to the document.
-pdf("/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/MDS_plot_age_effect.pdf") 
+pdf(paste(resultPathway, "Plots/MDS_plot_age_effect.pdf", sep=""))
 plotMDS.DGEList(dge, col=col_cell_age, main="MDS plot (age effect)")
 dev.off() 
 ####################################################################
@@ -94,9 +95,10 @@ dev.off()
 ####################################################################
 source("Code/EdgeRLinearTime.R")
 source("Code/EdgeRDispersions.R")
-#setwd("/home/mdubbelaar/APP23/CreatedData/EdgeR/")
-setwd("/Users//mldubbelaar/APP23/CreatedData/EdgeR/")
-source("../saveDEData.R")
+source("Code/EdgeRScatterplots.R")
+setwd("/home/mdubbelaar/Desktop/APP23_results/EdgeR/")
+source("/home/mdubbelaar/APP23/CreatedData/saveDEData.R")
+setwd("/home/mdubbelaar/APP23/CreatedData/EdgeR/")
 ####################################################################
 #                          Quality plots                           #
 ####################################################################
@@ -122,21 +124,20 @@ plotMDS.DGEList(dge, col=col_cell_age)
 cor <- cor(M2, method="spearman")
 rownames(cor) <- targets$Samples
 colnames(cor) <- targets$Conditie
-#pdf("/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/Spearman_Cor_Plot.pdf")
-pdf("/Volumes/Elements_Marissa/School//Stage//APP23//Results//APP23_results//EdgeR/Plots/Spearman_Cor_Plot.pdf")
+pdf(paste(resultPathway, "Plots/Spearman_Cor_Plot.pdf", sep=""))
 heatmap.2(cor, symm = TRUE, col=greenred(350),
           trace="none", cexRow = 1 , cexCol = 1, ColSideColors= col_cell_age, RowSideColors=col_cell_age)
 dev.off()
 ####################################################################
 #                           PCA Plot                               #
 ####################################################################
-pcaPlot("/home/mdubbelaar/Desktop/APP23_results/EdgeR/")
+pcaPlot(resultPathway)
 ####################################################################
 #                            Heatmaps                              #
 ####################################################################
 # Checks the two toptable results with the most unique genes.
 # These heatmaps are saved within the heatmap.pdf.
-pdf("/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/heatmaps_containing_most_genes.pdf") 
+pdf(paste(resultPathway, "Plots/heatmaps_containing_most_genes.pdf", sep=""))
 heatmap.2(M2[match(rownames(toptable11.results), rownames(M2)),c(4:6, 10:12, 16:18, 22:24)], ColSideColors = col_cell_age[c(4:6, 10:12, 16:18, 22:24)], cexRow = 0.01, trace = "none", scale = "row", main="24M HET - 2M HET")
 heatmap.2(M2[match(rownames(toptable12.results), rownames(M2)),c(1:3, 7:9, 13:15, 19:21)], ColSideColors = col_cell_age[c(1:3, 7:9, 13:15, 19:21)], cexRow = 0.01, trace = "none", scale = "row", main="24M WT - 2M WT")
 dev.off()

@@ -1,7 +1,7 @@
 ####################################################################
 # Author    : M. Dubbelaar
 # Date      : 1-okt-2015
-# File Name : DifferentialExpressionDESeq2.R
+# File Name : DESeqDE2.R
 # Purpose   : To determine the unqiue genes within several DE.
 ####################################################################
 # This condition needs to be available within the sampleTable, 
@@ -18,7 +18,7 @@ ddsHETSeq <- DESeqDataSetFromHTSeqCount(sampleTable = sampleTable, directory = d
 colData(ddsHETSeq)$condition <- factor(colData(ddsHETSeq)$condition, levels=unique(targets$Conditie))
 dds <- normalizeData(ddsHETSeq)
 dds <- DESeq(dds, betaPrior = F, full = ~0+condition)
-
+####################################################################
 # The different DE are shown below
 # All of the conditions with an alpha of 0.05 will be saved.
 WT2M.vs.HET2M <- results(dds, contrast = c("condition", "WT.02", "HET.02"), alpha = 0.05)
@@ -33,7 +33,7 @@ WT18M.vs.WT6M <- results(dds, contrast = c("condition", "WT.18", "WT.06"), alpha
 WT24M.vs.WT18M <- results(dds, contrast = c("condition", "WT.24", "WT.18"), alpha = 0.05)
 WT24M.vs.WT2M <- results(dds, contrast = c("condition","WT.24" , "WT.02"), alpha = 0.05)
 HET24M.vs.HET2M <- results(dds, contrast = c("condition", "HET.24", "HET.02"), alpha = 0.05)
-
+####################################################################
 # The data will be used to get the unique genes with a adjusted p value of 0.05, 
 # these genes will be saved.
 toptable1.results <- getUniqueGenes(WT2M.vs.HET2M)
