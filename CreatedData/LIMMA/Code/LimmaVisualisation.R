@@ -27,12 +27,10 @@ library(statmod)
 ####################################################################
 #               Reading of the data and the targets                #
 ####################################################################
-source("../loadingAppFile.R")
-# The data found in loadingAppFile needs some adjustment for further
-# progress. The data needs to be filtered of the genenames within 
-# the column and needs to be set as the column name.
-M1 <- APP23_data[,2:25]
-row.names(M1) <- APP23_data[,1]
+source("../EdgeR/Code/EdgeRFunctions.R")
+M1 <- getData("/Users//mldubbelaar/Downloads/expression_table02.genelevel.GRCm38.v76.htseq.txt.table")
+targets <- getTarget("/Users//mldubbelaar/APP23/Targets.csv")
+source("../plotColors.R")
 
 # A dge list is creates, this list is used to estimate the GLM 
 # common, trended and tagwise dispersion. This object holds the 

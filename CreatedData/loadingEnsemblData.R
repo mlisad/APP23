@@ -23,8 +23,8 @@ attributes[grep("ensembl", attributes[,1]),]
 attributes[grep("entrez", attributes[,1]),]
 
 # The getBM function retrieves the given attributes. 
-BioM <- getBM(c("ensembl_gene_id", "entrezgene", "external_gene_name", "wikigene_description"), "", rownames(rawData), ensembl)
+BioM <- getBM(c("ensembl_gene_id", "entrezgene", "external_gene_name", "wikigene_description"), "", rownames(M1), ensembl)
 # The gene names will be used to link the data to the M1 dataset.
 # The entrez gene, the external gene name and the wiki gene description 
 # can be put together with the matching ensembl gene id.
-BioM <- BioM[match(rownames(rawData), BioM[,1]),]
+BioM <- BioM[match(rownames(M1), BioM[,1]),]

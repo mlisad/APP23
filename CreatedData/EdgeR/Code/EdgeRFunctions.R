@@ -125,7 +125,7 @@ pcaPlot <- function(pathway) {
 ####################################################################
 createToptableResults <- function(lrt, pathway, fdr, pval){
   if (missing(pathway)) {
-    pathway = "/home/mdubbelaar/Desktop/Results/APP23/Made_Documents/DE/"
+    pathway = "/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Made_Documents/DE/"
   }
   # Data is stored within the toptables for further anaylsis.
   toptable <- topTags(lrt, n=dim(dge[[1]])[1], adjust.method="BH", sort.by="none")
@@ -150,7 +150,7 @@ createToptableResults <- function(lrt, pathway, fdr, pval){
   return (output)
 } 
 
-saveInfoDE <- function(name, result, fileName1, fileName2, fileName3) {
+saveInfoDE <- function(result, fileName1, fileName2, fileName3) {
 # The Differential expression genes are saved into the vector, the 
 # second step is to create a list with information that can be used
 # in the columns for the differential expression data. The data of 
@@ -162,9 +162,12 @@ saveInfoDE <- function(name, result, fileName1, fileName2, fileName3) {
   geneColsOM_mainGenotype <- c("Genes", "logFC: Main-effect Genotype","FDR: Main-effect Genotype", "Gene Symbol", "Gene Description")
   geneColsOM_mainAge <- c("Genes", "logFC: Main-effect Age","FDR: Main-effect Age", "Gene Symbol", "Gene Description")
   geneColsOM_mainLinear <- c("Genes", "logFC: Linear Effect Age:Genotype",  "FDR:  Linear Effect Age:Genotype", "Gene Symbol", "Gene Description")
-  write.table(DE.ExpressionOM_mainGenotype ,paste("/home/mdubbelaar/Desktop/Results/", name,"/Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainGenotype, sep = "\t")
-  write.table(DE.ExpressionOM_mainAge , paste("/home/mdubbelaar/Desktop/Results/", name,"/Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
-  write.table(DE.ExpressionOM_Linear , paste("/home/mdubbelaar/Desktop/Results/", name,"/Made_Documents/DE_Files/", fileName3, sep = ""), row.names = F, col.names = geneColsOM_mainLinear, sep = "\t")
+  #write.table(DE.ExpressionOM_mainGenotype, paste("/home/mdubbelaar/Desktop/Results/", name,"/Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainGenotype, sep = "\t")
+  #write.table(DE.ExpressionOM_mainAge, paste("/home/mdubbelaar/Desktop/Results/", name,"/Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
+  #write.table(DE.ExpressionOM_Linear, paste("/home/mdubbelaar/Desktop/Results/", name,"/Made_Documents/DE_Files/", fileName3, sep = ""), row.names = F, col.names = geneColsOM_mainLinear, sep = "\t")
+  write.table(DE.ExpressionOM_mainGenotype, paste("/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainGenotype, sep = "\t")
+  write.table(DE.ExpressionOM_mainAge, paste("/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
+  write.table(DE.ExpressionOM_Linear, paste("/Volumes/Elements_Marissa/School/Stage/APP23/Results/APP23_results/EdgeR/Made_Documents/DE_Files/", fileName3, sep = ""), row.names = F, col.names = geneColsOM_mainLinear, sep = "\t")
 }
 
 calculateMaineffectsInteraction <- function(dge, design, pathwayDoc, pathwayPlot, length) {
@@ -221,66 +224,4 @@ calculateMaineffectsInteraction <- function(dge, design, pathwayDoc, pathwayPlot
                                                                                                            "Main-effect Genotype (FDR)", "Main-effect Age (logFC)", "Main-effect Age (FDR)", "Linear Effect (logFC)", 
                                                                                                            "Linear Effect (FDR)", "Gene Symbol", "Gene Description"), sep = "\t")
   data <- list(Toptable1.results, Toptable2.results, Toptable3.results, geneInfo1,geneInfo2, geneInfo3)
-}
-
-differentialExpression <- function(name, pathway) {   
-  ####################################################################
-  #                            MDS Plot                              #
-  ####################################################################
-  # The MDS plot is made and saved within a file with the use of pdf()
-  # dev.off() is necessary to close the connection to the document.
-  #mdsPlot("/home/mdubbelaar/Desktop/Results/Human/MDS.pdf")
-  mdsPlot(paste(pathway, "Plots/MDS.pdf", sep=""))
-  if (name == "APP23") {
-    ####################################################################
-    #                      Data Check (APP23 only)                     #
-    ####################################################################
-    CPMmatrix <- as.matrix(cpm(dge, log = T))
-    rownames(CPMmatrix) <- BioM[,3]
-    
-    appGene <- which(rownames(CPMmatrix)=="App")
-    appExpression <- CPMmatrix[appGene,]
-    pdf(paste(pathway, "Plots/AppCheck.pdf", sep=""))
-    #pdf("/home/mdubbelaar/Desktop/APP23_results/EdgeR/Plots/AppCheck.pdf")
-    plot(appExpression, col=col_cell_age, pch=20, cex=3, ylab = "Expression of App")
-    dev.off()
-    
-    source("/home/mdubbelaar/APP23/CreatedData/EdgeR/Code/EdgeRLinearTimeAPP23.R")
-    source("/home/mdubbelaar/APP23/CreatedData/EdgeR/Code/EdgeRDispersionsAPP23.R")
-    source("/home/mdubbelaar/APP23/CreatedData/saveDEData.R")
-  } else if (name== "Human") {
-    source("/home/mdubbelaar/APP23/CreatedData/EdgeR/Code/EdgeRDispersionsHuman.R")
-  } else if (name == "CKp25") {
-    source("/home/mdubbelaar/APP23/CreatedData/EdgeR/Code/EdgeRDispersionsCKp25.R")
-  } else {
-    print("Dataset is not known")
-  }
-  ####################################################################
-  #                          Quality plots                           #
-  ####################################################################
-  # Plots the biological coefficient of variantion agains the log2 
-  # counts per million. The common, trended ans tagwise BCV estimates
-  # are shown in the plot
-  plotBCV(dge, cex=0.4)
-  # Plots the sample relations. The distances of the RNA-seq is 
-  # calulated, the distances represent the coefficient of variation
-  # of expression among the sampels.
-  plotMDS.DGEList(dge, col=col_cell_age)
-  ####################################################################
-  #                    Spearman correlatie plot                      #
-  ####################################################################
-  # A heatmap with the correlation of the different genes are shown.
-  # This correlation is calculated from the M2 dataset.
-  cor <- cor(M2, method="spearman")
-  rownames(cor) <- targets$Samples
-  colnames(cor) <- targets$Conditie
-  #pdf("/home/mdubbelaar/Desktop/Human_results/Plots/Spearman_Cor_Plot.pdf")
-  pdf(paste(pathway, "Plots/Spearman_Cor_Plot.pdf", sep=""))
-  heatmap.2(cor, symm = TRUE, col=greenred(350),
-            trace="none", cexRow = 1 , cexCol = 1, ColSideColors= col_cell_age, RowSideColors=col_cell_age)
-  dev.off()
-  ####################################################################
-  #                           PCA Plot                               #
-  ####################################################################
-  pcaPlot(pathway)
 }
