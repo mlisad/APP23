@@ -86,16 +86,20 @@ mdsPlot <- function(pathway){
   dev.off() 
 }
 
-plotMostExpr <- function(results, calc1, calc2, amount, path) {
+plotMostExpr <- function(results, calc1, calc2, amount, path, type) {
 # The function plotMostExpr makes sure that a heatmap is made
 # of the genes that are returned by the function filterResult.
 # There are two heatmaps in stead of two, these two conditions
 # are found the most informative.
   results1 <- filterResult(results[[2]], results[[5]], calc1)
   results2 <- filterResult(results[[3]], results[[6]], calc2)
-  pdf(path)
-  heatmap.2(M3[match(rownames(results1), rownames(M3)), amount], ColSideColors= col_cell_age[amount], cexRow = 1, trace = "none", scale = "row", main="Main effect age")
-  heatmap.2(M3[match(rownames(results2), rownames(M3)), amount], ColSideColors= col_cell_age[amount], cexRow = 1, trace = "none", scale = "row", main="Linear Effect")
+  results3 <- filterResult(results[[1]], results[[4]], resultsOlderMice[[1]][[1]]$FDR <  1E-8)
+  write.csv(results1, paste(path, "ResultsForOneHeatmap", type, "MA.txt", sep = ""), row.names = rownames(results1), eol=",\n", quote = F)
+  write.csv(results3, paste(path, "ResultsForOneHeatmap", type, "MG.txt", sep = ""), row.names = row.names(results3), eol=",\n", quote = F)
+  write.csv(results2, paste(path, "ResultsForOneHeatmap", type, "IE.txt", sep = ""), row.names = row.names(results2), eol=",\n", quote = F)
+  pdf(paste(path, "AgeAndLinear", type, ".pdf", sep=""))
+  heatmap.2(M3[match(rownames(results1), rownames(M3)), amount], ColSideColors= col_cell_age[amount], col=hmcol, cexRow = 1, trace = "none", scale = "row", main="Main effect age")
+  heatmap.2(M3[match(rownames(results2), rownames(M3)), amount], ColSideColors= col_cell_age[amount], col=hmcol, cexRow = 1, trace = "none", scale = "row", main="Interaction Effect")
   dev.off()
 }
 
@@ -193,8 +197,8 @@ calculateMaineffectsInteraction <- function(dge, design, pathwayDoc, pathwayPlot
   # Creation of a DE file of the main and the interaction effects.
   DE_Expression <- cbind(rownames(Toptable1[[1]]), Toptable1[[1]]$logFC, Toptable1[[1]]$FDR, Toptable2[[1]]$logFC, Toptable2[[1]]$FDR, Toptable3[[1]]$logFC, Toptable3[[1]]$FDR, BioM[,3:4])
   write.table(DE_Expression , paste(pathwayDoc, "LinearTimeDE.txt", sep=""), row.names = F,  col.names = c("Genes", "Main-effect Genotype (logFC)", 
-                                                                                                           "Main-effect Genotype (FDR)", "Main-effect Age (logFC)", "Main-effect Age (FDR)", "Linear Effect (logFC)", 
-                                                                                                           "Linear Effect (FDR)", "Gene Symbol", "Gene Description"), sep = "\t")
+                                                                                                           "Main-effect Genotype (FDR)", "Main-effect Age (logFC)", "Main-effect Age (FDR)", "Interaction Effect (logFC)", 
+                                                                                                           "Interaction Effect (FDR)", "Gene Symbol", "Gene Description"), sep = "\t")
   data <- list(Toptable1.results, Toptable2.results, Toptable3.results, geneInfo1,geneInfo2, geneInfo3)
 }
 
@@ -246,11 +250,11 @@ saveInfoDE <- function(result, fileName1, fileName2, fileName3) {
 # text file with all of the information.
   DE.ExpressionOM_mainGenotype <- cbind(rownames(result[[1]][[1]]), result[[1]][[1]]$logFC, result[[1]][[1]]$FDR, result[[4]][,3:4])
   DE.ExpressionOM_mainAge <- cbind(rownames(result[[2]][[1]]), result[[2]][[1]]$logFC, result[[2]][[1]]$FDR, result[[5]][,3:4])
-  DE.ExpressionOM_Linear <- cbind(rownames(result[[3]][[1]]), result[[3]][[1]]$logFC, result[[3]][[1]]$FDR, result[[6]][,3:4])
+  DE.ExpressionOM_interaction <- cbind(rownames(result[[3]][[1]]), result[[3]][[1]]$logFC, result[[3]][[1]]$FDR, result[[6]][,3:4])
   geneColsOM_mainGenotype <- c("Genes", "logFC: Main-effect Genotype","FDR: Main-effect Genotype", "Gene Symbol", "Gene Description")
   geneColsOM_mainAge <- c("Genes", "logFC: Main-effect Age","FDR: Main-effect Age", "Gene Symbol", "Gene Description")
-  geneColsOM_mainLinear <- c("Genes", "logFC: Linear Effect Age:Genotype",  "FDR:  Linear Effect Age:Genotype", "Gene Symbol", "Gene Description")
+  geneColsOM_mainInteraction <- c("Genes", "logFC: Interaction Effect Age:Genotype",  "FDR:  Interaction Effect Age:Genotype", "Gene Symbol", "Gene Description")
   write.table(DE.ExpressionOM_mainGenotype, paste(resultPathway, "Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainGenotype, sep = "\t")
   write.table(DE.ExpressionOM_mainAge, paste(resultPathway, "Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
-  write.table(DE.ExpressionOM_Linear, paste(resultPathway, "Made_Documents/DE_Files/", fileName3, sep = ""), row.names = F, col.names = geneColsOM_mainLinear, sep = "\t")
+  write.table(DE.ExpressionOM_interaction, paste(resultPathway, "Made_Documents/DE_Files/", fileName3, sep = ""), row.names = F, col.names = geneColsOM_mainInteraction, sep = "\t")
 }

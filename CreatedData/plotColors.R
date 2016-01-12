@@ -15,12 +15,14 @@ col_cell_age <- rep("black", dim(targets)[1])
 # ages will differ from light (young mice) to dark (old mice).
 
 # red color
-col_cell_age[targets$Conditie ==  "WT.02"] = col=rainbow(265)[20]
-col_cell_age[targets$Conditie ==  "WT.06"] = col=rainbow(265)[15]
-col_cell_age[targets$Conditie ==  "WT.18"] = col=rainbow(265)[10]
-col_cell_age[targets$Conditie ==  "WT.24"] = col=rainbow(265)[1]
+#col_cell_age[targets$Conditie ==  "WT.02"] = col=rainbow(265)[20]
+col_cell_age[targets$Conditie ==  "WT.02"] = col="lightpink"
+col_cell_age[targets$Conditie ==  "WT.06"] = col="indianred1"
+col_cell_age[targets$Conditie ==  "WT.18"] = col="red"
+col_cell_age[targets$Conditie ==  "WT.24"] = col="brown4"
+
 # Blue color
-col_cell_age[targets$Conditie ==  "HET.02"] = col=rainbow(265)[145]
-col_cell_age[targets$Conditie ==  "HET.06"] = col=rainbow(265)[150]
-col_cell_age[targets$Conditie ==  "HET.18"] = col=rainbow(265)[155]
-col_cell_age[targets$Conditie ==  "HET.24"] = col=rainbow(265)[160]
+col_cell_age[targets$Conditie ==  "HET.02"] = col="cyan2"
+col_cell_age[targets$Conditie ==  "HET.06"] = col="deepskyblue2"
+col_cell_age[targets$Conditie ==  "HET.18"] = col="dodgerblue3"
+col_cell_age[targets$Conditie ==  "HET.24"] = col="blue3"

@@ -32,8 +32,8 @@ dgeOlderMice <- estimateGLMTrendedDisp(dgeOlderMice, designOlderMice)
 resultsOlderMice <- calculateMaineffectsInteraction(dgeOlderMice, designOlderMice, paste(resultPathway, "Made_Documents/6-18-24M_old_mice/", sep=""), paste(resultPathway, "Plots/linear_time_heatmaps/old_mice_heatmaps.pdf", sep=""), c(7:24))
 
 saveInfoDE(resultsOlderMice, "DifferentialGenesMainGenotypeOldMice.txt", "DifferentialGenesMainAgeOldMice.txt", "DifferentialGenesLinearOldMice.txt")
-plotMostExpr(resultsOlderMice, which(resultsOlderMice[[2]][[1]]$FDR < 0.01 & resultsOlderMice[[2]][[1]]$logFC > .075), which(resultsOlderMice[[3]][[1]]$FDR < 0.01 & resultsOlderMice[[3]][[1]]$logFC > .05),
-             7:24, paste(resultPathway, "Plots/30mostexpressedGenes/AgeAndLinearOld.pdf", sep=""))
+plotMostExpr(resultsOlderMice, which(resultsOlderMice[[2]][[1]]$FDR < 1E-8), which(resultsOlderMice[[3]][[1]]$FDR < 1E-8),
+             7:24, paste(resultPathway, "Plots/30mostexpressedGenes/", sep=""), "Old")
 ####################################################################
 #   Results with a design Genotype * Time without 18 & 24 months   #
 ####################################################################
@@ -48,4 +48,4 @@ resultsYoungerMice <- calculateMaineffectsInteraction(dgeYoungerMice, designYoun
 
 saveInfoDE(resultsYoungerMice,"DifferentialGenesMainGenotypeYoungMice.txt", "DifferentialGenesMainAgeYoungMice.txt", "DifferentialGenesLinearYoungMice.txt")
 plotMostExpr(resultsYoungerMice, which(resultsYoungerMice[[2]][[1]]$FDR < 0.01 & resultsYoungerMice[[2]][[1]]$logFC > .15), which(resultsYoungerMice[[3]][[1]]$FDR < 0.05),
-             1:12, paste(resultPathway, "Plots/30mostexpressedGenes/AgeAndLinearYoung.pdf", sep=""))
+             1:12, paste(resultPathway, "Plots/30mostexpressedGenes/", sep=""), "Young")

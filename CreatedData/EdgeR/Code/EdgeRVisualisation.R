@@ -21,12 +21,13 @@ setwd("/home/mdubbelaar/APP23/CreatedData/EdgeR/")
 #biocLite("biomaRt")
 #biocLite("gplots")
 #install.packages("rgl")
-
+#install.packages("RColorBrewer")
 library(limma)
 library(edgeR)
 library(biomaRt)
 library(gplots)
 library(rgl)
+library("RColorBrewer")
 resultPathway <- "/home/mdubbelaar/Desktop/APP23_results/EdgeR/"
 ####################################################################
 #               Reading of the data and the targets                #
@@ -88,12 +89,18 @@ rownames(M3) <- BioM[,3]
 # The MDS plot is made and saved within a file with the use of pdf()
 # dev.off() is necessary to close the connection to the document.
 pdf(paste(resultPathway, "Plots/MDS_plot_age_effect.pdf", sep=""))
-plotMDS.DGEList(dge, col=col_cell_age, main="MDS plot (age effect)")
+plotMDS.DGEList(dge, col=col_cell_age, main="MDS plot", pch=19, cex=2)
+dev.off()
+pdf(paste(resultPathway, "Plots/MDSLegenda.pdf", sep=""))
+plotMDS.DGEList(dge, col=col_cell_age, main="MDS plot", pch=19, cex=2)
+legend("topright", col = unique(col_cell_age), legend = unique(targets$Conditie), pch=19)
 dev.off() 
 ####################################################################
 #                    Differential Expression                       #
 ####################################################################
+hmcol <- colorRampPalette(brewer.pal(3, "PRGn"))
 source("Code/EdgeRLinearTime.R")
+source("Code/EdgeRHeatmapsMerge.R")
 source("Code/EdgeRDispersions.R")
 source("Code/EdgeRScatterplots.R")
 setwd("/home/mdubbelaar/Desktop/APP23_results/EdgeR/")
@@ -127,7 +134,7 @@ colnames(cor) <- targets$Conditie
 pdf(paste(resultPathway, "Plots/Spearman_Cor_Plot.pdf", sep=""))
 heatmap.2(cor, symm = TRUE, col=greenred(350),
           trace="none", cexRow = 1 , cexCol = 1, ColSideColors= col_cell_age, RowSideColors=col_cell_age)
-dev.off()
+dev.off() 
 ####################################################################
 #                           PCA Plot                               #
 ####################################################################
