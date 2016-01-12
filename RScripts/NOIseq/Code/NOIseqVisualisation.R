@@ -9,7 +9,7 @@
 #              Installing all of the necessary packages            #
 ####################################################################
 source("http://bioconductor.org/biocLite.R")
-setwd("/home/mdubbelaar/APP23/CreatedData/NOIseq/")
+setwd("/home/mdubbelaar/APP23/RScripts/NOIseq/")
 #biocLite("NOISeq")
 #biocLite("biomaRt")
 library("NOISeq")

@@ -1,5 +1,5 @@
 source("http://bioconductor.org/biocLite.R") 
-setwd("/home/mdubbelaar/APP23/CreatedData/WGCNA/")
+setwd("/home/mdubbelaar/APP23/RScripts/WGCNA/")
 ####################################################################
 #install.packages("WGCNA")
 #biocLite("GO.db")

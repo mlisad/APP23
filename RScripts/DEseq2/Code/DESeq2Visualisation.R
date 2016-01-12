@@ -10,7 +10,7 @@
 ####################################################################
 #                     Loading necessary items                      #
 ####################################################################
-setwd("/home/mdubbelaar/APP23/CreatedData/DEseq2/")
+setwd("/home/mdubbelaar/APP23/RScripts/DEseq2/")
 source("http://bioconductor.org/biocLite.R")
 #biocLite("biomaRt")
 #biocLite("DESeq2")

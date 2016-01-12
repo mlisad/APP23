@@ -13,7 +13,7 @@
 #              Installing all of the necessary packages            #
 ####################################################################
 source("http://bioconductor.org/biocLite.R")
-setwd("/home/mdubbelaar/APP23/CreatedData/LIMMA/")
+setwd("/home/mdubbelaar/APP23/RScripts/LIMMA/")
 #install.packages("gplots")
 #install.packages("statmod")
 #biocLite("biomaRt")
@@ -132,8 +132,8 @@ source("../plotColors.R")
 source("Code/LimmaLinearTime.R")
 source("Code/LimmaDispersions.R")
 setwd("/home/mdubbelaar/Desktop/APP23_results/LIMMA/")
-source("/home/mdubbelaar/APP23/CreatedData/saveDEData.R")
-setwd("/home/mdubbelaar/APP23/CreatedData/LIMMA/")
+source("/home/mdubbelaar/APP23/RScripts/saveDEData.R")
+setwd("/home/mdubbelaar/APP23/RScripts/LIMMA/")
 ####################################################################
 #                            Heatmaps                              #
 ####################################################################

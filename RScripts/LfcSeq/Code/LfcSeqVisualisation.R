@@ -10,7 +10,7 @@
 #              Installing all of the necessary packages            #
 ####################################################################
 source("http://bioconductor.org/biocLite.R")
-setwd("/home/mdubbelaar/APP23/CreatedData/LfcSeq/")
+setwd("/home/mdubbelaar/APP23/RScripts/LfcSeq/")
 #install.packages("RColorBrewer")
 #install.packages("gplots")
 library("RColorBrewer")

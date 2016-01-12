@@ -15,7 +15,7 @@
 #              Installing all of the necessary packages            #
 ####################################################################
 source("http://bioconductor.org/biocLite.R")
-setwd("/home/mdubbelaar/APP23/CreatedData/EdgeR/")
+setwd("/home/mdubbelaar/APP23/RScripts/EdgeR/")
 #biocLite("limma")
 #biocLite("edgeR")
 #biocLite("biomaRt")
@@ -104,8 +104,8 @@ source("Code/EdgeRHeatmapsMerge.R")
 source("Code/EdgeRDispersions.R")
 source("Code/EdgeRScatterplots.R")
 setwd("/home/mdubbelaar/Desktop/APP23_results/EdgeR/")
-source("/home/mdubbelaar/APP23/CreatedData/saveDEData.R")
-setwd("/home/mdubbelaar/APP23/CreatedData/EdgeR/")
+source("/home/mdubbelaar/APP23/RScripts/saveDEData.R")
+setwd("/home/mdubbelaar/APP23/RScripts/EdgeR/")
 ####################################################################
 #                          Quality plots                           #
 ####################################################################
