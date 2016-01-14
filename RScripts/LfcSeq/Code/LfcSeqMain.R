@@ -46,7 +46,7 @@ saveFoundData <- function(data, samples, norm, mapName) {
   colnames(unique) <- samples
   # The data will be saved as a heatmap and the genes found will be saved
   # into a text file.
-  pdf(paste("Plots/", mapName, norm, "Heatmap.pdf", sep=""))
+  pdf(paste(resultPathway, "Plots/", mapName, norm, "Heatmap.pdf", sep=""))
   heatmap.2(as.matrix(unique), cexRow = 0.0001,  col = hmcol, trace = "none", scale = "row", main = paste("Data ", data))
   dev.off()
   write.table(rownames(unique), file = paste(resultPathway, "Made_Documents/", mapName, norm, "Genes.txt", sep=""), row.names = F, col.names=F, sep=", ", quote = F)

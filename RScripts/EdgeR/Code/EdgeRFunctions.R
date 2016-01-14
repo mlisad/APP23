@@ -258,3 +258,18 @@ saveInfoDE <- function(result, fileName1, fileName2, fileName3) {
   write.table(DE.ExpressionOM_mainAge, paste(resultPathway, "Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
   write.table(DE.ExpressionOM_interaction, paste(resultPathway, "Made_Documents/DE_Files/", fileName3, sep = ""), row.names = F, col.names = geneColsOM_mainInteraction, sep = "\t")
 }
+
+getTop20 <- function(results, path, type) {
+  mainEffectGenotypeOrdered <- results[[1]][[1]][order(abs(results[[1]][[1]]$logFC), decreasing = T),]
+  mainEffectAgeOrdered <- results[[2]][[1]][order(abs(results[[2]][[1]]$logFC), decreasing = T),]
+  InteractionEffectOrdered <- results[[3]][[1]][order(abs(results[[3]][[1]]$logFC), decreasing = T),]
+  topMainGenotype <- mainEffectGenotypeOrdered[1:20,]
+  topMainAge <- mainEffectAgeOrdered[1:20,]
+  topInteraction <- InteractionEffectOrdered[1:20,]
+  mainEffectGenotypeGenes <- BioM[match(rownames(topMainGenotype), BioM[,1]),]
+  mainEffectAgeGenes <- BioM[match(rownames(topMainAge), BioM[,1]),]
+  InteractionEffectGenes <- BioM[match(rownames(topInteraction), BioM[,1]),]
+  write.csv(topMainAge[,1], paste(path, "ResultsForOneHeatmapTop20", type, "MG.txt", sep = ""), row.names = mainEffectGenotypeGenes[,3], eol=",\n", quote = F)
+  write.csv(topMainAge[,1], paste(path, "ResultsForOneHeatmapTop20", type, "MA.txt", sep = ""), row.names = mainEffectAgeGenes[,3], eol=",\n", quote = F)
+  write.csv(topInteraction[,1], paste(path, "ResultsForOneHeatmapTop20", type, "IE.txt", sep = ""), row.names = InteractionEffectGenes[,3], eol=",\n", quote = F)
+}
