@@ -30,6 +30,7 @@ source("../EdgeR/Code//EdgeRFunctions.R")
 M1 <- getData("/media/mdubbelaar/6CEC0BDEEC0BA186/1507_Holtman_RNAseq/run01/results/expression/expressionTable/expression_table02.genelevel.GRCm38.v76.htseq.txt.table")
 targets <- getTarget("../../Targets.csv")
 source("../loadingEnsemblData.R")
+hmcol <- colorRampPalette(c("purple", "lightgrey", "green")) (n=99)
 ####################################################################
 #                          Filtering data                          #
 ####################################################################
@@ -169,19 +170,19 @@ modTraitPNormal <- corPvalueStudent(modTraitCorNormal, nrow(t(M2)))
 # A text matrix is made, this matrix contains all of the 
 # correlation values and the pvalues for each module and trait.
 textMatrixNormal <- paste(signif(modTraitCorNormal,2), " \n(",
-                    signif(modTraitPNormal, 1), ")", sep="")
+                          signif(modTraitPNormal, 1), ")", sep="")
 dim(textMatrixNormal) <- dim(modTraitCorNormal[,1])
 
 # The correlation values and the p-values are shown in the heatmap correlation plot.
-pdf(paste(resultPathway,"Module-trait_RelationshipNormal.pdf", sep=""))
+pdf(paste(resultPathway,"Plots/Module-trait_RelationshipNormal.pdf", sep=""))
 par(mar = c(6, 8.5, 3, 3))
 # The rows of the heatmap correspond to the module eigengene and each row
 # is known to a traits. The cells in the heatmap contain the correlation
 # adn the p-value.
-labeledHeatmap(Matrix = modTraitCorNormal, xLabels = c("Genotype","Age", "Development", "APP Aging", "WT Aging"), yLabels = names(MEs),
-               ySymbols = names(MEs), colorLabels = F, colors = blueWhiteRed(50), 
-               textMatrix = textMatrixNormal, setStdMargins = F, cex.text = 0.5, zlim=c(-1, 1),
-               main="Module-trait relationships")
+labeledHeatmap(Matrix = modTraitCorNormal, xLabels = c("Genotype","Age", "Development", "APP23 Aging", "WT Aging"), yLabels = names(MEs),
+               ySymbols = names(MEs), colorLabels = F, colors = hmcol, 
+               textMatrix = textMatrixNormal, setStdMargins = F, cex.text = 0.8, zlim=c(-1, 1), cex.lab.x = 1.5,
+               cex.lab.y = 0.0000001, main="Module-trait relationships")
 dev.off()
 
 # The Correlation and the pValue of the module eigengenes are calculated
@@ -192,7 +193,7 @@ modTraitPAB <- corPvalueStudent(modTraitCorAB, nrow(t(M2)))
 # A text matrix is made, this matrix contains all of the 
 # correlation values and the pvalues for each module and trait.
 textMatrixAB <- paste(signif(modTraitCorAB,2), " \n(",
-                          signif(modTraitPAB, 1), ")", sep="")
+                      signif(modTraitPAB, 1), ")", sep="")
 dim(textMatrixAB) <- dim(modTraitCorAB[,1])
 
 # The correlation values and the p-values are shown in the heatmap correlation plot.
@@ -202,8 +203,8 @@ par(mar = c(6, 8.5, 3, 3))
 # is known to a traits. The cells in the heatmap contain the correlation
 # adn the p-value.
 labeledHeatmap(Matrix = modTraitCorAB, xLabels = c("AB", "AB40", "AB42"), yLabels = names(MEs),
-               ySymbols = names(MEs), colorLabels = F, colors = blueWhiteRed(50), 
-               textMatrix = textMatrixAB, setStdMargins = F, cex.text = 0.5, zlim=c(-1, 1),
+               ySymbols = names(MEs), colorLabels = F, colors = hmcol, 
+               textMatrix = textMatrixAB, setStdMargins = F, cex.text = 0.8, zlim=c(-1, 1), cex.lab.x = 1,
                main="Module-trait relationships")
 dev.off()
 ###################################################################
@@ -426,5 +427,4 @@ for (module in names(table(modName))){
 }
 # Directory is set to save the environment since some steps like
 # calculation the TOM takes a lot of time.
-setwd("/home/mdubbelaar/")
 save.image()

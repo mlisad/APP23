@@ -20,9 +20,9 @@ setRowname <- function(data) {
 #             Load the unique information about data               #
 ####################################################################
 getData <- function(pathwayData) {
-# The rawData contains the probe names and all of the measurement 
-# for each sample in the study. The pathway and the seperator for the
-# data file is given. The data in this file will be saved as rawData.
+  # The rawData contains the probe names and all of the measurement 
+  # for each sample in the study. The pathway and the seperator for the
+  # data file is given. The data in this file will be saved as rawData.
   rawData <- read.delim(pathwayData, sep="\t")
   rawData <- rawData[order(colnames(rawData), decreasing = F )]
   rawData <- setRowname(rawData)
@@ -65,9 +65,9 @@ filterGenes <- function(tabel, fdr, logfc) {
 }
 
 filterResult <- function(tabel, bioMList, calculation) {
-# The function filterResults gets the genes and their 
-# information according to the given calculation
-# The BioM list is adjusted immediately as well.
+  # The function filterResults gets the genes and their 
+  # information according to the given calculation
+  # The BioM list is adjusted immediately as well.
   uniqueGenes <- calculation
   uniqueGenesList <- data.frame(tabel[uniqueGenes,])
   BioM.uniqueGenes <- bioMList[uniqueGenes, ]
@@ -79,24 +79,21 @@ filterResult <- function(tabel, bioMList, calculation) {
 #                          Plot function                           #
 ####################################################################
 mdsPlot <- function(pathway){
-# The mdsPlot functions makes sure that a MDS plot is made
-# The labels show the condition of the samples.
+  # The mdsPlot functions makes sure that a MDS plot is made
+  # The labels show the condition of the samples.
   pdf(pathway) 
   plotMDS.DGEList(dge, col=col_cell_age, main="MDS plot", labels = targets$Conditie)
   dev.off() 
 }
 
 plotMostExpr <- function(results, calc1, calc2, amount, path, type) {
-# The function plotMostExpr makes sure that a heatmap is made
-# of the genes that are returned by the function filterResult.
-# There are two heatmaps in stead of two, these two conditions
-# are found the most informative.
+  # The function plotMostExpr makes sure that a heatmap is made
+  # of the genes that are returned by the function filterResult.
+  # There are two heatmaps in stead of two, these two conditions
+  # are found the most informative.
   results1 <- filterResult(results[[2]], results[[5]], calc1)
   results2 <- filterResult(results[[3]], results[[6]], calc2)
   results3 <- filterResult(results[[1]], results[[4]], resultsOlderMice[[1]][[1]]$FDR <  1E-8)
-  write.csv(results1, paste(path, "ResultsForOneHeatmap", type, "MA.txt", sep = ""), row.names = rownames(results1), eol=",\n", quote = F)
-  write.csv(results3, paste(path, "ResultsForOneHeatmap", type, "MG.txt", sep = ""), row.names = row.names(results3), eol=",\n", quote = F)
-  write.csv(results2, paste(path, "ResultsForOneHeatmap", type, "IE.txt", sep = ""), row.names = row.names(results2), eol=",\n", quote = F)
   pdf(paste(path, "AgeAndLinear", type, ".pdf", sep=""))
   heatmap.2(M3[match(rownames(results1), rownames(M3)), amount], ColSideColors= col_cell_age[amount], col=hmcol, cexRow = 1, trace = "none", scale = "row", main="Main effect age")
   heatmap.2(M3[match(rownames(results2), rownames(M3)), amount], ColSideColors= col_cell_age[amount], col=hmcol, cexRow = 1, trace = "none", scale = "row", main="Interaction Effect")
@@ -203,6 +200,71 @@ calculateMaineffectsInteraction <- function(dge, design, pathwayDoc, pathwayPlot
 }
 
 ####################################################################
+#                      Functions mergeheatmaps                     #
+####################################################################
+getTop20 <- function(results, path, type) {
+  # This function obtains the results from the GLM, 
+  # a pathway and a type (old or young) to create 
+  # files with the top 20 genes of each profile
+  # and each effect (Main effect age, genotype and
+  # interaction effect).
+  # The first step is to order the results on the absolute
+  # logFC value.
+  mainEffectGenotypeOrdered <- results[[1]][[1]][order(abs(results[[1]][[1]]$logFC), decreasing = T),]
+  mainEffectAgeOrdered <- results[[2]][[1]][order(abs(results[[2]][[1]]$logFC), decreasing = T),]
+  InteractionEffectOrdered <- results[[3]][[1]][order(abs(results[[3]][[1]]$logFC), decreasing = T),]
+  # The second step is to obtain the top 20 genes.
+  topMainGenotype <- mainEffectGenotypeOrdered[1:20,]
+  topMainAge <- mainEffectAgeOrdered[1:20,]
+  topInteraction <- InteractionEffectOrdered[1:20,]
+  # Last step is to obtain the gene symbols, to make sure that the
+  # ensemble id's can be replaced by the gene symbol.
+  mainEffectGenotypeGenes <- BioM[match(rownames(topMainGenotype), BioM[,1]),]
+  mainEffectAgeGenes <- BioM[match(rownames(topMainAge), BioM[,1]),]
+  InteractionEffectGenes <- BioM[match(rownames(topInteraction), BioM[,1]),]
+  # These genes will be written into a top20 file, so these files can be used
+  # in the function EdgeRHeatmapsMerge.R
+  write.csv(topMainAge[,1], paste(path, "ResultsForOneHeatmapTop20", type, "MG.txt", sep = ""), row.names = mainEffectGenotypeGenes[,3], eol=",\n", quote = F)
+  write.csv(topMainAge[,1], paste(path, "ResultsForOneHeatmapTop20", type, "MA.txt", sep = ""), row.names = mainEffectAgeGenes[,3], eol=",\n", quote = F)
+  write.csv(topInteraction[,1], paste(path, "ResultsForOneHeatmapTop20", type, "IE.txt", sep = ""), row.names = InteractionEffectGenes[,3], eol=",\n", quote = F)
+}
+
+getDataMat <- function(dataMA, dataMG, dataIE) {
+  # This function is used to create a matrix with genes,
+  # that are found within the top20 files.
+  # This matrix will be used to obtain the data from the
+  # M3 (normalized data matrix with gene symbols as rownames) 
+  # the overlap that is found in this matrix helps to give a 
+  # good overlap with the heatmap that will be created in the end.
+  
+  # The column names contain the condition of the samples
+  colnames(M3) <- targets$Conditie
+  # The unique genes are loaded from the three files are saved are rownamesData.
+  rownamesData <- unique(c(as.matrix(dataMG[,1]), as.matrix(dataMA[,1]), as.matrix(dataIE[,1])))
+  # The values are loaded into a matrix, this matrix is made to detect from which group
+  # the gene originate from.
+  dataMat <- apply(cbind(rownamesData, dataMG[match(rownamesData, dataMG[,1]),2], dataMA[match(rownamesData, dataMA[,1]),2], dataIE[match(rownamesData, dataIE[,1]),2]), 2, function(x) unname(unlist(x)))
+  # The information containing NA is overwritten as 0.
+  dataMat[is.na(dataMat)] <- 0
+  return (dataMat)
+}
+
+getlogFCVal <- function(uniqueGenes, columnsDataMat, HET24, ColorCol) {
+  # This function creates the data that can be used for the heatmap.
+  # The real data is obtained with the use of the M3 dataset
+  # The values of the obtained data will be created with the use of the 
+  # raw information - the mean of the row. This creates the logFC.
+  logFCVal <- M3[match(uniqueGenes, rownames(M3)),columnsDataMat] - apply(M3[match(uniqueGenes, rownames(M3)),columnsDataMat], 1, mean)
+  # The colors for the genes are also added into the matrix
+  logFCVal <- apply(cbind(logFCVal, col_genes), 2, function(x) unname(unlist(x)))
+  # The rownames will be the genes.
+  rownames(logFCVal) <- rownames(M3[match(uniqueGenes, rownames(M3)),columnsDataMat] )
+  # An ordering is done on the group were the genes come from and the highest 
+  # expression of the HET24 mice.
+  logFCVal <- logFCVal[order(as.numeric(as.character(logFCVal[,HET24])), decreasing = T),]
+  logFCVal <- logFCVal[order(factor(logFCVal[,ColorCol], levels = c("green", "palegreen", "grey", "orchid", "purple", "grey47", "black"))),]
+}
+####################################################################
 #                          Other functions                         #
 ####################################################################
 changeFDR <- function(table) {
@@ -243,11 +305,11 @@ createToptableResults <- function(lrt, pathway, fdr, pval){
 } 
 
 saveInfoDE <- function(result, fileName1, fileName2, fileName3) {
-# The Differential expression genes are saved into the vector, the 
-# second step is to create a list with information that can be used
-# in the columns for the differential expression data. The data of 
-# the DE data set and the list of names will be used to create a 
-# text file with all of the information.
+  # The Differential expression genes are saved into the vector, the 
+  # second step is to create a list with information that can be used
+  # in the columns for the differential expression data. The data of 
+  # the DE data set and the list of names will be used to create a 
+  # text file with all of the information.
   DE.ExpressionOM_mainGenotype <- cbind(rownames(result[[1]][[1]]), result[[1]][[1]]$logFC, result[[1]][[1]]$FDR, result[[4]][,3:4])
   DE.ExpressionOM_mainAge <- cbind(rownames(result[[2]][[1]]), result[[2]][[1]]$logFC, result[[2]][[1]]$FDR, result[[5]][,3:4])
   DE.ExpressionOM_interaction <- cbind(rownames(result[[3]][[1]]), result[[3]][[1]]$logFC, result[[3]][[1]]$FDR, result[[6]][,3:4])
@@ -257,19 +319,4 @@ saveInfoDE <- function(result, fileName1, fileName2, fileName3) {
   write.table(DE.ExpressionOM_mainGenotype, paste(resultPathway, "Made_Documents/DE_Files/", fileName1, sep = ""), row.names = F, col.names = geneColsOM_mainGenotype, sep = "\t")
   write.table(DE.ExpressionOM_mainAge, paste(resultPathway, "Made_Documents/DE_Files/", fileName2, sep = ""), row.names = F, col.names = geneColsOM_mainAge, sep = "\t")
   write.table(DE.ExpressionOM_interaction, paste(resultPathway, "Made_Documents/DE_Files/", fileName3, sep = ""), row.names = F, col.names = geneColsOM_mainInteraction, sep = "\t")
-}
-
-getTop20 <- function(results, path, type) {
-  mainEffectGenotypeOrdered <- results[[1]][[1]][order(abs(results[[1]][[1]]$logFC), decreasing = T),]
-  mainEffectAgeOrdered <- results[[2]][[1]][order(abs(results[[2]][[1]]$logFC), decreasing = T),]
-  InteractionEffectOrdered <- results[[3]][[1]][order(abs(results[[3]][[1]]$logFC), decreasing = T),]
-  topMainGenotype <- mainEffectGenotypeOrdered[1:20,]
-  topMainAge <- mainEffectAgeOrdered[1:20,]
-  topInteraction <- InteractionEffectOrdered[1:20,]
-  mainEffectGenotypeGenes <- BioM[match(rownames(topMainGenotype), BioM[,1]),]
-  mainEffectAgeGenes <- BioM[match(rownames(topMainAge), BioM[,1]),]
-  InteractionEffectGenes <- BioM[match(rownames(topInteraction), BioM[,1]),]
-  write.csv(topMainAge[,1], paste(path, "ResultsForOneHeatmapTop20", type, "MG.txt", sep = ""), row.names = mainEffectGenotypeGenes[,3], eol=",\n", quote = F)
-  write.csv(topMainAge[,1], paste(path, "ResultsForOneHeatmapTop20", type, "MA.txt", sep = ""), row.names = mainEffectAgeGenes[,3], eol=",\n", quote = F)
-  write.csv(topInteraction[,1], paste(path, "ResultsForOneHeatmapTop20", type, "IE.txt", sep = ""), row.names = InteractionEffectGenes[,3], eol=",\n", quote = F)
 }

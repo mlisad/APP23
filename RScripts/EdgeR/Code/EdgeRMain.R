@@ -22,6 +22,8 @@ setwd("/home/mdubbelaar/APP23/RScripts/EdgeR/")
 #biocLite("gplots")
 #install.packages("rgl")
 #install.packages("RColorBrewer")
+#install.packages('VennDiagram')
+library(VennDiagram)
 library(limma)
 library(edgeR)
 library(biomaRt)
@@ -103,7 +105,7 @@ source("Code/EdgeRLinearTime.R")
 source("Code/EdgeRHeatmapsMerge.R")
 source("Code/EdgeRDispersions.R")
 source("Code/EdgeRScatterplots.R")
-setwd("/home/mdubbelaar/Desktop/APP23_results/EdgeR/")
+setwd(resultPathway)
 source("/home/mdubbelaar/APP23/RScripts/saveDEData.R")
 setwd("/home/mdubbelaar/APP23/RScripts/EdgeR/")
 ####################################################################
@@ -147,4 +149,29 @@ pcaPlot(resultPathway)
 pdf(paste(resultPathway, "Plots/heatmaps_containing_most_genes.pdf", sep=""))
 heatmap.2(M2[match(rownames(toptable11.results), rownames(M2)),c(4:6, 10:12, 16:18, 22:24)], ColSideColors = col_cell_age[c(4:6, 10:12, 16:18, 22:24)], cexRow = 0.01, trace = "none", scale = "row", main="24M HET - 2M HET")
 heatmap.2(M2[match(rownames(toptable12.results), rownames(M2)),c(1:3, 7:9, 13:15, 19:21)], ColSideColors = col_cell_age[c(1:3, 7:9, 13:15, 19:21)], cexRow = 0.01, trace = "none", scale = "row", main="24M WT - 2M WT")
+dev.off()
+
+####################################################################
+#                         Venn Diagram                             #
+####################################################################
+# Data that is stored in the following files contains the genes that
+# are differentially expressed in the given profiles and stages.
+LinearDevelopment <- read.csv(paste(resultPathway, "Made_Documents/2M-6M_old_mice/interaction_result.txt", sep = ""))
+mainAgeDevelopment <- read.csv(paste(resultPathway, "Made_Documents/2M-6M_old_mice/main_age_result.txt", sep = ""))
+mainGenotypeDevelopment <- read.csv(paste(resultPathway, "Made_Documents/2M-6M_old_mice/main_genotype_result.txt", sep = ""))
+LinearAging <- read.csv(paste(resultPathway, "Made_Documents/6-18-24M_old_mice/interaction_result.txt", sep = ""))
+mainAgeAging <- read.csv(paste(resultPathway, "Made_Documents/6-18-24M_old_mice/main_age_result.txt", sep = ""))
+mainGenotypeAging <- read.csv(paste(resultPathway, "Made_Documents/6-18-24M_old_mice/main_genotype_result.txt", sep = ""))
+# These files are used to create the dendrogram for the manuscript.
+# The venn.diagram is called twice since this will result in a brighter
+# green and purple color.
+pdf(paste(resultPathway, "Plots/Venndiagram.pdf", sep = ""))
+v1 <- venn.diagram(list(Main_Genotype=mainGenotypeDevelopment[,1], Main_Age=mainAgeDevelopment[,1], Interaction=LinearDevelopment[,1]), filename=NULL, fill=c("green", "purple","grey"), cex=3)
+v1 <- venn.diagram(list(Main_Genotype=mainGenotypeDevelopment[,1], Main_Age=mainAgeDevelopment[,1], Interaction=LinearDevelopment[,1]), filename=NULL, fill=c("green", "purple","grey"), cex=3)
+grid.newpage()
+grid.draw(v1)
+v2 <- venn.diagram(list(Main_Genotype=mainGenotypeAging[,1], Main_Age=mainAgeAging[,1], Interaction=LinearAging[,1]), filename=NULL, fill=c("green", "purple","grey"), cex=3)
+v2 <- venn.diagram(list(Main_Genotype=mainGenotypeAging[,1], Main_Age=mainAgeAging[,1], Interaction=LinearAging[,1]), filename=NULL, fill=c("green", "purple","grey"), cex=3)
+grid.newpage()
+grid.draw(v2)
 dev.off()

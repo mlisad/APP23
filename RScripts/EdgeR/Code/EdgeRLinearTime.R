@@ -34,7 +34,7 @@ resultsOlderMice <- calculateMaineffectsInteraction(dgeOlderMice, designOlderMic
 saveInfoDE(resultsOlderMice, "DifferentialGenesMainGenotypeOldMice.txt", "DifferentialGenesMainAgeOldMice.txt", "DifferentialGenesLinearOldMice.txt")
 plotMostExpr(resultsOlderMice, which(resultsOlderMice[[2]][[1]]$FDR < 1E-8), which(resultsOlderMice[[3]][[1]]$FDR < 1E-8),
              7:24, paste(resultPathway, "Plots/30mostexpressedGenes/", sep=""), "Old")
-getTop20(resultsOlderMice, "/home/mdubbelaar/Desktop/", "old")
+getTop20(resultsOlderMice, paste(resultPathway, "Made_Documents/Top20Genes/", sep=""), "old")
 ####################################################################
 #   Results with a design Genotype * Time without 18 & 24 months   #
 ####################################################################
@@ -50,4 +50,4 @@ resultsYoungerMice <- calculateMaineffectsInteraction(dgeYoungerMice, designYoun
 saveInfoDE(resultsYoungerMice,"DifferentialGenesMainGenotypeYoungMice.txt", "DifferentialGenesMainAgeYoungMice.txt", "DifferentialGenesLinearYoungMice.txt")
 plotMostExpr(resultsYoungerMice, which(resultsYoungerMice[[2]][[1]]$FDR < 0.01 & resultsYoungerMice[[2]][[1]]$logFC > .15), which(resultsYoungerMice[[3]][[1]]$FDR < 0.05),
              1:12, paste(resultPathway, "Plots/30mostexpressedGenes/", sep=""), "Young")
-getTop20(resultsYoungerMice, "/home/mdubbelaar/Desktop/", "young")
+getTop20(resultsYoungerMice, paste(resultPathway, "Made_Documents/Top20Genes/", sep = ""), "young")
